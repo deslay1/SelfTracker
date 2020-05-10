@@ -3,6 +3,7 @@ const tintColor = "red";
 export default {
   tintColor,
   lightTintColor: "#ffe9e9",
+  underlayColor: "#ff5151",
   lightTextColor: "pink",
   tabIconDefault: "#ccc",
   tabIconSelected: tintColor,

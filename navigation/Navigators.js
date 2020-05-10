@@ -13,6 +13,10 @@ import ItemListScreen from "../screens/ItemListScreen";
 import MoodTrackerScreen from "../screens/MoodTrackerScreen";
 import TemporaryScreen from "../screens/TemporaryScreen";
 
+import LoginScreen from "../screens/LoginScreen";
+import RegisterScreen from "../screens/RegisterScreen";
+import LoadingScreen from "../screens/LoadingScreen";
+
 import TabIcon from "../components/TabIcon";
 import SideBar from "../components/SideBar";
 
@@ -52,8 +56,12 @@ const TabNavigator = createBottomTabNavigator(
     MenuStack,
     MoodStack,
   },
+
   {
     initialRouteName: "MenuStack",
+    tabBarOptions: {
+      activeTintColor: "#000",
+    },
   }
 );
 
@@ -101,16 +109,25 @@ const Drawernavigator = createDrawerNavigator(
   }
 );
 
+const AuthStack = createStackNavigator(
+  {
+    Login: LoginScreen,
+    Register: RegisterScreen,
+  },
+  {
+    initialRouteName: "Login",
+  }
+);
+
 export default createAppContainer(
   createSwitchNavigator(
     {
       Main: Drawernavigator,
-      //Register: RegisterScreen,
-      //Login: LoginScreen,
-      //Loading: LoadingScreen,
-    } /* ,
-      {
-        initialRouteName: "Loading",
-      } */
+      Auth: AuthStack,
+      Loading: LoadingScreen,
+    },
+    {
+      initialRouteName: "Loading",
+    }
   )
 );

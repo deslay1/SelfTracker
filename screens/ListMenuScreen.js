@@ -1,16 +1,30 @@
 import React, { Component } from "react";
-import { View, Text, FlatList, SafeAreaView, StyleSheet, TouchableOpacity, _FlatList } from "react-native";
+import { View, Text, FlatList, SafeAreaView, StyleSheet, TouchableOpacity, Modal } from "react-native";
 
 import DrawerButton from "../components/DrawerButton";
+import AddItemModal from "../components/AddItemModal";
 
 import { FontAwesome, AntDesign } from "@expo/vector-icons";
-
 import Colors from "../constants/Colors";
 
 export default class ListMenuScreen extends Component {
+  state = {
+    addItemVisible: false,
+  };
+
+  toggleAddItemModal() {
+    this.setState({ addItemVisible: !this.state.addItemVisible });
+  }
+
   render() {
     return (
       <View style={styles.container}>
+        <Modal
+          animationType="slide"
+          visible={this.state.addItemVisible}
+          onRequestClose={() => this.toggleAddItemModal()}>
+          <AddItemModal closeModal={() => this.toggleAddItemModal()} />
+        </Modal>
         <SafeAreaView style={styles.header}>
           <Text style={styles.headerTitle}>{this.props.navigation.title}My Lists</Text>
           <DrawerButton navigation={this.props.navigation} screen={"MENU"} />
@@ -26,7 +40,7 @@ export default class ListMenuScreen extends Component {
             <View style={styles.divider} />
           </View>
           <View style={{ marginVertical: 48 }}>
-            <TouchableOpacity style={styles.addList}>
+            <TouchableOpacity style={styles.addList} onPress={() => this.toggleAddItemModal()}>
               <AntDesign name="plus" size={16} color={Colors.tintColor} />
             </TouchableOpacity>
             <Text style={styles.add}>Add a list</Text>
