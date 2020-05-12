@@ -1,8 +1,19 @@
 import React, { Component } from "react";
-import { View, Text, FlatList, SafeAreaView, StyleSheet, TouchableOpacity, Modal } from "react-native";
+import {
+  View,
+  Text,
+  FlatList,
+  SafeAreaView,
+  StyleSheet,
+  TouchableOpacity,
+  Modal,
+  ActivityIndicator,
+} from "react-native";
+
+import Fire from "../Fire";
 
 import DrawerButton from "../components/DrawerButton";
-import AddItemModal from "../components/AddItemModal";
+import AddListModal from "../components/AddListModal";
 import ItemList from "../components/ItemList";
 
 import { FontAwesome, AntDesign } from "@expo/vector-icons";
@@ -12,26 +23,62 @@ export default class ListMenuScreen extends Component {
   state = {
     addItemVisible: false,
     lists: [],
+    user: {},
+    loading: true,
+    userLoading: true,
   };
+
+  componentDidMount() {
+    const user = this.props.uid || Fire.shared.uid;
+    Fire.shared.getLists((lists) => {
+      this.setState({ lists, user }, () => {
+        this.setState({ loading: false });
+      });
+    });
+  }
+
+  getUsername() {
+    const user = this.props.uid || Fire.shared.uid;
+    Fire.shared.firestore
+      .collection("users")
+      .doc(user)
+      .onSnapshot(
+        (doc) => {
+          this.setState({ user: doc.data(), userLoading: false });
+        },
+        (error) => {
+          alert(error.message);
+        }
+      );
+    return this.state.user.username;
+  }
+
+  componentWillUnmount() {
+    Fire.shared.detach();
+  }
 
   toggleAddItemModal() {
     this.setState({ addItemVisible: !this.state.addItemVisible });
   }
 
   renderList = (list) => {
-    return <ItemList list={list} updateList={this.updateList} />;
+    return <ItemList list={list} updateList={this.updateList} deleteList={this.deleteList} />;
   };
 
   addList = (list) => {
-    this.setState({ lists: [...this.state.lists, { ...list, id: this.state.lists.length + 1, items: [] }] });
+    Fire.shared.addList({
+      name: list.name,
+      color: list.color,
+      items: [],
+    });
   };
 
   updateList = (list) => {
-    this.setState({
-      lists: this.state.lists.map((item) => {
-        return item.id === list.id ? list : item;
-      }),
-    });
+    Fire.shared.updateList(list);
+  };
+
+  deleteList = (list) => {
+    Fire.shared.deleteList(list);
   };
 
   render() {
@@ -41,14 +88,20 @@ export default class ListMenuScreen extends Component {
           animationType="slide"
           visible={this.state.addItemVisible}
           onRequestClose={() => this.toggleAddItemModal()}>
-          <AddItemModal closeModal={() => this.toggleAddItemModal()} addList={this.addList} />
+          <AddListModal closeModal={() => this.toggleAddItemModal()} addList={this.addList} />
         </Modal>
-        <SafeAreaView style={styles.header}>
+        <View style={styles.header}>
           <Text style={styles.headerTitle}>{this.props.navigation.title}My Lists</Text>
           <DrawerButton navigation={this.props.navigation} screen={"MENU"} />
-        </SafeAreaView>
+        </View>
 
         <View style={styles.content}>
+          {this.state.loading ? (
+            <ActivityIndicator />
+          ) : (
+            <Text style={{ fontWeight: "bold" }}>{this.getUsername()}'s : </Text>
+          )}
+
           <View style={styles.contentHeader}>
             <View style={styles.divider} />
             <Text style={styles.contentTitle}>
@@ -67,7 +120,7 @@ export default class ListMenuScreen extends Component {
           <View style={{ height: 300, paddingLeft: 8 }}>
             <FlatList
               data={this.state.lists}
-              keyExtractor={(item) => item.name}
+              keyExtractor={(item) => item.id.toString()}
               horizontal={true}
               showsHorizontalScrollIndicator={false}
               renderItem={({ item }) => this.renderList(item)}

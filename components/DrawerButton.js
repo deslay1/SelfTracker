@@ -17,6 +17,7 @@ export default class DrawerButton extends Component {
 const styles = StyleSheet.create({
   container: {
     alignItems: "flex-end",
+    marginRight: 30,
   },
   text: {
     fontSize: 14,

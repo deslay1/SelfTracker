@@ -20,7 +20,12 @@ export default class ItemList extends Component {
     return (
       <View>
         <Modal animationType="slide" visible={this.state.showListVisible} onRequestClose={() => this.toggleListModal()}>
-          <ItemListModal list={list} closeModal={() => this.toggleListModal()} updateList={this.props.updateList} />
+          <ItemListModal
+            list={list}
+            closeModal={() => this.toggleListModal()}
+            updateList={this.props.updateList}
+            deleteList={this.props.deleteList}
+          />
         </Modal>
         <TouchableOpacity
           style={[styles.listContainer, { backgroundColor: list.color }]}

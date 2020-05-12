@@ -4,6 +4,7 @@ import("firebase/firestore");
 
 //Controllers
 import UserController from "./controllers/UserController";
+import ListController from "./controllers/ListController";
 
 class Fire {
   constructor() {
@@ -44,8 +45,33 @@ class Fire {
     firebase.auth().signOut();
   };
 
+  /* get user() {
+    console.log(UserController.user);
+    return UserController.user;
+  } */
+
   get uid() {
     return (firebase.auth().currentUser || {}).uid;
+  }
+
+  getLists(callback) {
+    ListController.getLists(callback);
+  }
+
+  addList(list) {
+    ListController.addList(list);
+  }
+
+  updateList(list) {
+    ListController.updateList(list);
+  }
+
+  deleteList(list) {
+    ListController.deleteList(list);
+  }
+
+  detach() {
+    ListController.detach();
   }
 
   get firestore() {
@@ -54,14 +80,6 @@ class Fire {
 
   get timestamp() {
     return Date.now();
-  }
-
-  off() {
-    this.listDB.off();
-  }
-
-  get listDB() {
-    return this.firestore.collection("lists");
   }
 }
 

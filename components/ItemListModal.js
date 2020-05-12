@@ -10,7 +10,11 @@ import {
   Platform,
   TextInput,
   Keyboard,
+  Alert,
+  Animated,
 } from "react-native";
+
+import Swipeable from "react-native-gesture-handler/Swipeable";
 import { AntDesign, FontAwesome } from "@expo/vector-icons";
 import Colors from "../constants/Colors";
 
@@ -31,38 +35,91 @@ export default class ItemListModal extends Component {
 
   addItem = () => {
     let list = this.props.list;
-    list.items.push({ title: this.state.newItem, completed: false });
 
-    this.props.updateList(list);
+    if (!list.items.some((item) => item.title === this.state.newItem)) {
+      list.items.push({ title: this.state.newItem, completed: false });
+      this.props.updateList(list);
+    }
     this.setState({ newItem: "" });
-
     Keyboard.dismiss();
   };
 
+  deleteItem = (index) => {
+    let list = this.props.list;
+    list.items.splice(index, 1);
+
+    this.props.updateList(list);
+  };
+
+  alertDeleteList = (list) =>
+    Alert.alert(
+      "Delete List?",
+      "Are you sure you want to delete this list?",
+      [
+        {
+          text: "Cancel",
+          style: "cancel",
+        },
+        { text: "Delete", onPress: () => this.props.deleteList(list) },
+      ],
+      { cancelable: false }
+    );
+
+  alertDeleteItem = (itemIndex) =>
+    Alert.alert(
+      "Delete Item?",
+      "Are you sure you want to delete this item?",
+      [
+        {
+          text: "Cancel",
+          style: "cancel",
+        },
+        { text: "Delete", onPress: () => this.deleteItem(itemIndex) },
+      ],
+      { cancelable: true }
+    );
+
   renderItem = (item, index) => {
     return (
-      <View style={styles.itemContainer}>
-        <TouchableOpacity onPress={() => this.toggleItemCompleted(index)}>
-          <FontAwesome
-            name={item.completed ? "check-square" : "square-o"}
-            size={24}
-            color={Colors.underlayColor}
-            style={{ width: 32 }}
-          />
-        </TouchableOpacity>
+      <Swipeable renderRightActions={(_, dragX) => this.rightActions(dragX, index)}>
+        <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
+          <View style={styles.itemContainer}>
+            <TouchableOpacity onPress={() => this.toggleItemCompleted(index)}>
+              <FontAwesome
+                name={item.completed ? "check-square" : "square-o"}
+                size={24}
+                color={Colors.underlayColor}
+                style={{ width: 32 }}
+              />
+            </TouchableOpacity>
 
-        <Text
-          style={[
-            styles.item,
-            {
-              textDecorationLine: item.completed ? "line-through" : "none",
-              color: item.completed ? Colors.tintColor : "black",
-            },
-          ]}>
-          {item.title}
-        </Text>
-      </View>
+            <Text
+              style={[
+                styles.item,
+                {
+                  textDecorationLine: item.completed ? "line-through" : "none",
+                  color: item.completed ? Colors.tintColor : "black",
+                },
+              ]}>
+              {item.title}
+            </Text>
+          </View>
+          <View>
+            <TouchableOpacity style={styles.button} onPress={() => this.alertDeleteItem(index)}>
+              <Text style={styles.buttonText}>Delete</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Swipeable>
     );
+  };
+
+  rightActions = (dragX, index) => {
+    <TouchableOpacity>
+      <Animated.View>
+        <Animated.Text>Delete</Animated.Text>
+      </Animated.View>
+    </TouchableOpacity>;
   };
 
   render() {
@@ -75,13 +132,40 @@ export default class ItemListModal extends Component {
         keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 500}
         behavior={Platform.OS === "ios" ? "padding" : null}>
         <SafeAreaView style={styles.container}>
-          <TouchableOpacity style={{ position: "absolute", top: 64, right: 32 }} onPress={this.props.closeModal}>
-            <AntDesign name="close" size={24} color="black" />
-          </TouchableOpacity>
-
-          <View style={[styles.section, styles.header, { borderBottomColor: list.color }]}>
-            <View>
-              <Text style={[styles.title, { color: list.color }]}>{list.name}</Text>
+          <View style={[styles.section, styles.header]}>
+            <View style={{ paddingBottom: 4, borderBottomWidth: 4, borderBottomColor: list.color }}>
+              <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
+                <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
+                  <Text style={[styles.title, { color: list.color }]}>{list.name}</Text>
+                  <TouchableOpacity onPress={() => this.alertDeleteList(list)}>
+                    <FontAwesome name="trash" color={Colors.tintColor} size={24} />
+                  </TouchableOpacity>
+                </View>
+                <TouchableOpacity onPress={this.props.closeModal}>
+                  <Text
+                    style={[
+                      styles.closeModalText,
+                      {
+                        borderColor: list.color,
+                        color: Colors.tintColor,
+                      },
+                    ]}>
+                    Close
+                  </Text>
+                  {/* <AntDesign
+                    style={{
+                      alignSelf: "center",
+                      padding: 4,
+                      borderWidth: 4,
+                      borderRadius: 16,
+                      borderColor: list.color,
+                    }}
+                    name="close"
+                    size={24}
+                    color={Colors.tintColor}
+                  /> */}
+                </TouchableOpacity>
+              </View>
               <Text style={styles.itemCount}>
                 {completedCount} of {itemCount} completed
               </Text>
@@ -104,6 +188,7 @@ export default class ItemListModal extends Component {
               style={[styles.input, { borderColor: list.color }]}
               onChangeText={(text) => this.setState({ newItem: text })}
               value={this.state.newItem}
+              placeholder="Add an item"
             />
             <TouchableOpacity style={[styles.addItem, { backgroundColor: list.color }]} onPress={() => this.addItem()}>
               <AntDesign name="plus" size={16} color="white" />
@@ -128,12 +213,12 @@ const styles = StyleSheet.create({
   header: {
     justifyContent: "center",
     marginLeft: 40,
-    marginRight: 80,
-    borderBottomWidth: 3,
+    marginRight: 40,
   },
   title: {
     fontSize: 24,
     fontWeight: "bold",
+    marginRight: 12,
     //color: Colors.tintColor,
   },
   itemCount: {
@@ -141,6 +226,33 @@ const styles = StyleSheet.create({
     marginBottom: 4,
     color: "#ccc",
     fontWeight: "bold",
+  },
+  closeModalText: {
+    fontSize: 14,
+    fontWeight: "bold",
+    alignSelf: "center",
+    textAlign: "center",
+    textAlignVertical: "center",
+    padding: 4,
+    borderWidth: 4,
+    borderRadius: 16,
+  },
+  buttonText: {
+    fontSize: 12,
+    paddingHorizontal: 2,
+    color: "white",
+    alignSelf: "center",
+  },
+  button: {
+    backgroundColor: Colors.tintColor,
+    borderColor: Colors.lightTintColor,
+    borderWidth: 1,
+    borderRadius: 8,
+    padding: 8,
+    marginVertical: 2,
+    marginHorizontal: 2,
+    alignSelf: "stretch",
+    justifyContent: "center",
   },
   footer: {
     paddingHorizontal: 32,
@@ -165,6 +277,7 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
     flexDirection: "row",
     alignItems: "center",
+    width: 200,
   },
   item: {
     color: "black",

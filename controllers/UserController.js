@@ -67,6 +67,17 @@ class UserController {
     }
   };
 
+  /*   get user() {
+    const user = null;
+    this.userCollection
+      .doc(this.uid)
+      .get()
+      .then((doc) => {
+        user = doc.data();
+      });
+    return user;
+  } */
+
   get userCollection() {
     return firebase.firestore().collection("users");
   }

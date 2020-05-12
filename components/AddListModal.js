@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, TouchableOpacity, KeyboardAvoidingView, TextInp
 import { AntDesign } from "@expo/vector-icons";
 import Colors from "../constants/Colors";
 
-export default class AddItemModal extends Component {
+export default class AddListModal extends Component {
   backgroundColors = ["#5CD859", "#24A6D9", "#595BD9", "#8022D9", "#D159D8", "#D85963", "#D88559"];
 
   state = {
