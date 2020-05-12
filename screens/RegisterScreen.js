@@ -65,7 +65,7 @@ export default class RegisterScreen extends Component {
       // Avoiding the keyboard does not work for me...
       <KeyboardAvoidingView
         style={{ flex: 1 }}
-        keyboardVerticalOffset={-500}
+        keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 500}
         behavior={Platform.OS === "ios" ? "padding" : null}>
         <TouchableOpacity style={styles.back} onPress={() => this.props.navigation.goBack()}>
           <AntDesign name="arrowleft" size={32} color="#FFF"></AntDesign>

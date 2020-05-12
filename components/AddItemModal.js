@@ -14,7 +14,8 @@ export default class AddItemModal extends Component {
   createTodo = () => {
     const { name, color } = this.state;
 
-    //send to firebase list
+    const list = { name, color };
+    this.props.addList(list);
 
     this.setState({ name: "" });
     this.props.closeModal();

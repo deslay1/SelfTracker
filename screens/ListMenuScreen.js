@@ -3,6 +3,7 @@ import { View, Text, FlatList, SafeAreaView, StyleSheet, TouchableOpacity, Modal
 
 import DrawerButton from "../components/DrawerButton";
 import AddItemModal from "../components/AddItemModal";
+import ItemList from "../components/ItemList";
 
 import { FontAwesome, AntDesign } from "@expo/vector-icons";
 import Colors from "../constants/Colors";
@@ -10,11 +11,28 @@ import Colors from "../constants/Colors";
 export default class ListMenuScreen extends Component {
   state = {
     addItemVisible: false,
+    lists: [],
   };
 
   toggleAddItemModal() {
     this.setState({ addItemVisible: !this.state.addItemVisible });
   }
+
+  renderList = (list) => {
+    return <ItemList list={list} updateList={this.updateList} />;
+  };
+
+  addList = (list) => {
+    this.setState({ lists: [...this.state.lists, { ...list, id: this.state.lists.length + 1, items: [] }] });
+  };
+
+  updateList = (list) => {
+    this.setState({
+      lists: this.state.lists.map((item) => {
+        return item.id === list.id ? list : item;
+      }),
+    });
+  };
 
   render() {
     return (
@@ -23,7 +41,7 @@ export default class ListMenuScreen extends Component {
           animationType="slide"
           visible={this.state.addItemVisible}
           onRequestClose={() => this.toggleAddItemModal()}>
-          <AddItemModal closeModal={() => this.toggleAddItemModal()} />
+          <AddItemModal closeModal={() => this.toggleAddItemModal()} addList={this.addList} />
         </Modal>
         <SafeAreaView style={styles.header}>
           <Text style={styles.headerTitle}>{this.props.navigation.title}My Lists</Text>
@@ -39,19 +57,22 @@ export default class ListMenuScreen extends Component {
 
             <View style={styles.divider} />
           </View>
-          <View style={{ marginVertical: 48 }}>
+          <View style={{ marginVertical: 32 }}>
             <TouchableOpacity style={styles.addList} onPress={() => this.toggleAddItemModal()}>
               <AntDesign name="plus" size={16} color={Colors.tintColor} />
             </TouchableOpacity>
             <Text style={styles.add}>Add a list</Text>
           </View>
 
-          <View style={{ height: 175, paddingLeft: 32 }}>
+          <View style={{ height: 300, paddingLeft: 8 }}>
             <FlatList
-              data={this.renderList}
+              data={this.state.lists}
               keyExtractor={(item) => item.name}
               horizontal={true}
               showsHorizontalScrollIndicator={false}
+              renderItem={({ item }) => this.renderList(item)}
+              keyboardDismissMode="none"
+              keyboardShouldPersistTaps="always"
             />
           </View>
         </View>
@@ -75,7 +96,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     paddingTop: 50,
     paddingBottom: 16,
-    marginBottom: 8,
     backgroundColor: "#FFF",
     borderBottomWidth: 2,
     borderBottomColor: "#EBECF4",
