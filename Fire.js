@@ -5,6 +5,7 @@ import("firebase/firestore");
 //Controllers
 import UserController from "./controllers/UserController";
 import ListController from "./controllers/ListController";
+import MoodController from "./controllers/MoodController";
 
 class Fire {
   constructor() {
@@ -74,12 +75,40 @@ class Fire {
     ListController.detach();
   }
 
+  getMoods(callback) {
+    MoodController.getMoods(callback);
+  }
+
+  /*   addMood(mood, moodsUID) {
+    MoodController.addMood(mood, moodsUID);
+  } */
+
+  addMood(mood) {
+    MoodController.addMood(mood);
+  }
+
+  updateMood(mood, moodUID) {
+    MoodController.updateMood(mood, moodUID);
+  }
+
+  deleteMood(mood) {
+    MoodController.deleteMood(mood);
+  }
+
+  detachMood() {
+    MoodController.detach();
+  }
+
   get firestore() {
     return firebase.firestore();
   }
 
+  get firebase() {
+    return firebase;
+  }
+
   get timestamp() {
-    return Date.now();
+    return firebase.firestore.FieldValue.serverTimestamp();
   }
 }
 

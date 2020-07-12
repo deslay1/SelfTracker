@@ -33,7 +33,7 @@ const MenuStack = createStackNavigator(
   {
     initialRouteName: "ListMenu",
     navigationOptions: {
-      tabBarLabel: "Home",
+      tabBarLabel: "Tasks & Todos",
       tabBarIcon: ({ focused }) => <TabIcon focused={focused} name={"book"} />,
     },
   }
@@ -45,7 +45,7 @@ const MoodStack = createStackNavigator(
   },
   {
     navigationOptions: {
-      tabBarLabel: "Mood",
+      tabBarLabel: "Mood Tracker",
       tabBarIcon: ({ focused }) => <TabIcon focused={focused} name={"eye"} />,
     },
   }
@@ -58,9 +58,10 @@ const TabNavigator = createBottomTabNavigator(
   },
 
   {
-    initialRouteName: "MenuStack",
+    initialRouteName: "MoodStack",
     tabBarOptions: {
       activeTintColor: "#000",
+      style: { height: 50 },
     },
   }
 );

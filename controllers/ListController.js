@@ -1,6 +1,8 @@
 import firebase from "firebase";
 import("firebase/firestore");
 
+unMount = () => null;
+
 class ListController {
   getLists(callback) {
     let ref = this.listsCollection.orderBy("name");

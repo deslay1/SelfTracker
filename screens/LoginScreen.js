@@ -1,6 +1,7 @@
 import React, { Component } from "react";
-import { View, Text, StyleSheet, TouchableHighlight, ActivityIndicator, KeyboardAvoidingView } from "react-native";
+import { View, Text, StyleSheet, TouchableHighlight, ActivityIndicator, ScrollView } from "react-native";
 import { Input } from "react-native-elements";
+import Constants from "expo-constants";
 
 import * as firebase from "firebase";
 import Fire from "../Fire";
@@ -25,18 +26,22 @@ export default class LoginScreen extends Component {
   };
   render() {
     return (
-      <KeyboardAvoidingView style={styles.container}>
+      <ScrollView contentContainerStyle={styles.container}>
         <ActivityIndicator animating={this.state.isLoading} />
         <View style={styles.formContainer}>
           <Input
             label={"Email"}
             onChangeText={(email) => this.setState({ email: email })}
             shake={!this.state.error ? false : true}
+            keyboardType="email-address"
+            autoCapitalize="none"
           />
           <Input
             label={"Password"}
             onChangeText={(password) => this.setState({ password: password })}
             shake={!this.state.error ? false : true}
+            secureTextEntry={true}
+            autoCapitalize="none"
           />
         </View>
         <View style={styles.buttonContainer}>
@@ -50,7 +55,7 @@ export default class LoginScreen extends Component {
             <Text style={styles.buttonText}>Register</Text>
           </TouchableHighlight>
         </View>
-      </KeyboardAvoidingView>
+      </ScrollView>
     );
   }
 }
@@ -60,6 +65,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
+    marginTop: Constants.statusBarHeight,
   },
   formContainer: {
     marginTop: 32,

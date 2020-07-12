@@ -6,11 +6,12 @@ import {
   TouchableHighlight,
   Image,
   TouchableOpacity,
-  KeyboardAvoidingView,
+  ScrollView,
   Platform,
 } from "react-native";
 import { Input } from "react-native-elements";
 import { AntDesign } from "@expo/vector-icons";
+import Constants from "expo-constants";
 
 import Fire from "../Fire";
 
@@ -63,40 +64,53 @@ export default class RegisterScreen extends Component {
   render() {
     return (
       // Avoiding the keyboard does not work for me...
-      <KeyboardAvoidingView
-        style={{ flex: 1 }}
-        keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 500}
-        behavior={Platform.OS === "ios" ? "padding" : null}>
-        <TouchableOpacity style={styles.back} onPress={() => this.props.navigation.goBack()}>
-          <AntDesign name="arrowleft" size={32} color="#FFF"></AntDesign>
-        </TouchableOpacity>
-        <View style={styles.container}>
-          <TouchableOpacity style={styles.imagePlaceHolder} onPress={this.pickImage}>
-            <Image source={{ uri: this.state.user.image }} style={styles.image} />
-            <AntDesign name="adduser" size={32} color="#038887" style={{ marginTop: 10, marginLeft: 2 }}></AntDesign>
+      <ScrollView contentContainerStyle={styles.container}>
+        <View>
+          <TouchableOpacity style={styles.back} onPress={() => this.props.navigation.goBack()}>
+            <AntDesign name="arrowleft" size={32} color="#FFF" />
           </TouchableOpacity>
-          <View style={styles.formContainer}>
-            <Input
-              label={"Username"}
-              onChangeText={(username) => this.setState({ user: { ...this.state.user, username } })}
-            />
-            <Input label={"Email"} onChangeText={(email) => this.setState({ user: { ...this.state.user, email } })} />
-            <Input
-              label={"Password"}
-              onChangeText={(password) => this.setState({ user: { ...this.state.user, password } })}
-            />
-            <Input
-              label={"Confirm Password"}
-              onChangeText={(confirmPassword) => this.setState({ confirmPassword: confirmPassword })}
-            />
-          </View>
-          <View style={styles.buttonContainer}>
-            <TouchableHighlight style={styles.button} onPress={this.signUp} underlayColor={Colors.underlayColor}>
-              <Text style={styles.buttonText}>Sign Up</Text>
-            </TouchableHighlight>
-          </View>
+          <TouchableOpacity style={styles.imagePlaceHolder} onPress={this.pickImage}>
+            {this.state.user.image ? (
+              <Image source={{ uri: this.state.user.image }} style={styles.image} />
+            ) : (
+              <AntDesign name="adduser" size={32} color="#038887" style={{ marginTop: 10, marginLeft: 2 }} />
+            )}
+          </TouchableOpacity>
         </View>
-      </KeyboardAvoidingView>
+        <View style={styles.formContainer}>
+          <Input
+            label={"Username"}
+            labelStyle={{ fontSize: 12 }}
+            onChangeText={(username) => this.setState({ user: { ...this.state.user, username } })}
+          />
+          <Input
+            label={"Email"}
+            labelStyle={{ fontSize: 12 }}
+            onChangeText={(email) => this.setState({ user: { ...this.state.user, email } })}
+            keyboardType="email-address"
+            autoCapitalize="none"
+          />
+          <Input
+            label={"Password"}
+            labelStyle={{ fontSize: 12 }}
+            onChangeText={(password) => this.setState({ user: { ...this.state.user, password } })}
+            secureTextEntry={true}
+            autoCapitalize="none"
+          />
+          <Input
+            label={"Confirm Password"}
+            labelStyle={{ fontSize: 12 }}
+            onChangeText={(confirmPassword) => this.setState({ confirmPassword: confirmPassword })}
+            secureTextEntry={true}
+            autoCapitalize="none"
+          />
+        </View>
+        <View style={styles.buttonContainer}>
+          <TouchableHighlight style={styles.button} onPress={this.signUp} underlayColor={Colors.underlayColor}>
+            <Text style={styles.buttonText}>Sign Up</Text>
+          </TouchableHighlight>
+        </View>
+      </ScrollView>
     );
   }
 }
@@ -104,29 +118,26 @@ export default class RegisterScreen extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
+    marginTop: Constants.statusBarHeight * 1.5,
   },
   back: {
-    position: "absolute",
-    top: 48,
-    left: 32,
-    height: 50,
-    width: 50,
+    marginLeft: "10%",
+    marginRight: "78%",
     borderRadius: 32,
     backgroundColor: Colors.underlayColor,
     alignItems: "center",
     justifyContent: "center",
-    padding: 5,
+    padding: 4,
+    paddingTop: 6,
   },
   formContainer: {
+    alignItems: "center",
     marginTop: 32,
-    marginHorizontal: 30,
-    width: 300,
+    marginHorizontal: "10%",
+    height: 300,
   },
   buttonContainer: {
-    justifyContent: "center",
-    alignItems: "center",
+    alignSelf: "center",
     width: "90%",
   },
   buttonText: {
@@ -147,6 +158,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   imagePlaceHolder: {
+    alignSelf: "center",
     width: 100,
     height: 100,
     backgroundColor: "#E1E2E6",

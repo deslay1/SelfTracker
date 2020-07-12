@@ -8,6 +8,8 @@ import {
   TouchableOpacity,
   Modal,
   ActivityIndicator,
+  StatusBar,
+  Platform,
 } from "react-native";
 
 import Fire from "../Fire";
@@ -34,12 +36,15 @@ export default class ListMenuScreen extends Component {
       this.setState({ lists, user }, () => {
         this.setState({ loading: false });
       });
+      this.getUsername(user);
     });
   }
 
-  getUsername() {
-    const user = this.props.uid || Fire.shared.uid;
-    Fire.shared.firestore
+  unMount = null;
+
+  getUsername(user) {
+    //const user = this.props.uid || Fire.shared.uid;
+    this.unMount = Fire.shared.firestore
       .collection("users")
       .doc(user)
       .onSnapshot(
@@ -50,11 +55,13 @@ export default class ListMenuScreen extends Component {
           alert(error.message);
         }
       );
+
     return this.state.user.username;
   }
 
   componentWillUnmount() {
     Fire.shared.detach();
+    this.unMount();
   }
 
   toggleAddItemModal() {
@@ -99,7 +106,7 @@ export default class ListMenuScreen extends Component {
           {this.state.loading ? (
             <ActivityIndicator />
           ) : (
-            <Text style={{ fontWeight: "bold" }}>{this.getUsername()}'s : </Text>
+            <Text style={{ fontWeight: "bold" }}>{this.state.user.username}'s : </Text>
           )}
 
           <View style={styles.contentHeader}>
@@ -110,19 +117,20 @@ export default class ListMenuScreen extends Component {
 
             <View style={styles.divider} />
           </View>
-          <View style={{ marginVertical: 32 }}>
+          <View style={{ marginVertical: 16 }}>
             <TouchableOpacity style={styles.addList} onPress={() => this.toggleAddItemModal()}>
               <AntDesign name="plus" size={16} color={Colors.tintColor} />
             </TouchableOpacity>
             <Text style={styles.add}>Add a list</Text>
           </View>
 
-          <View style={{ height: 300, paddingLeft: 8 }}>
+          <View style={styles.flatList}>
             <FlatList
               data={this.state.lists}
               keyExtractor={(item) => item.id.toString()}
-              horizontal={true}
-              showsHorizontalScrollIndicator={false}
+              //horizontal={true}
+              //showsHorizontalScrollIndicator={false}
+              showsVerticalScrollIndicator={false}
               renderItem={({ item }) => this.renderList(item)}
               keyboardDismissMode="none"
               keyboardShouldPersistTaps="always"
@@ -147,8 +155,8 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     paddingHorizontal: 15,
-    paddingTop: 50,
-    paddingBottom: 16,
+    paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 40,
+    paddingBottom: 12,
     backgroundColor: "#FFF",
     borderBottomWidth: 2,
     borderBottomColor: "#EBECF4",
@@ -165,7 +173,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   content: {
-    flex: 1,
+    marginTop: 16,
     backgroundColor: "#fff",
     alignItems: "center",
     justifyContent: "center",
@@ -185,18 +193,19 @@ const styles = StyleSheet.create({
     color: Colors.lightTextColor,
     paddingHorizontal: 32,
   },
+  flatList: { height: 360 },
   addList: {
     borderWidth: 2,
     borderColor: Colors.lightTintColor,
-    borderRadius: 4,
-    padding: 16,
+    borderRadius: 8,
+    paddingVertical: 6,
     alignItems: "center",
-    justifyContent: "center",
+    marginHorizontal: "3%",
   },
   add: {
     fontWeight: "bold",
     color: Colors.tintColor,
     fontSize: 14,
-    marginTop: 4,
+    marginTop: 2,
   },
 });

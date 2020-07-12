@@ -18,7 +18,7 @@ export default class ItemList extends Component {
     const completedCount = list.items.filter((item) => item.completed).length;
     const remainingCount = list.items.length - completedCount;
     return (
-      <View>
+      <View style={[styles.container, { backgroundColor: list.color }]}>
         <Modal animationType="slide" visible={this.state.showListVisible} onRequestClose={() => this.toggleListModal()}>
           <ItemListModal
             list={list}
@@ -27,19 +27,17 @@ export default class ItemList extends Component {
             deleteList={this.props.deleteList}
           />
         </Modal>
-        <TouchableOpacity
-          style={[styles.listContainer, { backgroundColor: list.color }]}
-          onPress={() => this.toggleListModal()}>
+        <TouchableOpacity style={styles.listContainer} onPress={() => this.toggleListModal()}>
           <Text style={styles.listTitle} numberOfLines={1}>
             {list.name}
           </Text>
 
-          <View>
-            <View style={{ alignItems: "center" }}>
+          <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
+            <View style={{ alignItems: "center", flexDirection: "row" }}>
               <Text style={styles.count}>{remainingCount}</Text>
               <Text style={styles.subtitle}>Remaining</Text>
             </View>
-            <View style={{ alignItems: "center" }}>
+            <View style={{ alignItems: "center", flexDirection: "row" }}>
               <Text style={styles.count}>{completedCount}</Text>
               <Text style={styles.subtitle}>Completed</Text>
             </View>
@@ -51,26 +49,34 @@ export default class ItemList extends Component {
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    borderWidth: 1,
+    width: 300,
+    paddingHorizontal: 20,
+    marginVertical: 2,
+    borderRadius: 12,
+  },
   listContainer: {
-    paddingVertical: 16,
-    paddingHorizontal: 12,
-    borderRadius: 8,
-    marginHorizontal: 12,
-    alignItems: "center",
-    width: 150,
+    paddingVertical: 8,
+    alignItems: "baseline",
   },
   listTitle: {
     fontSize: 18,
     fontWeight: "bold",
     color: "#fff",
     marginBottom: 10,
+    //alignSelf: "baseline",
   },
   count: {
-    fontSize: 32,
+    fontSize: 16,
     color: "#fff",
+    paddingRight: 6,
   },
   subtitle: {
     color: "#fff",
     fontWeight: "bold",
+    fontSize: 16,
+    paddingRight: 12,
   },
 });

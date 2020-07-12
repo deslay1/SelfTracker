@@ -47,8 +47,9 @@ export default class AddListModal extends Component {
 
           <TextInput
             style={[styles.input, { borderColor: this.state.color }]}
-            placeholder="Enter List Name"
+            placeholder="Enter List Name (max 15 characters)"
             onChangeText={(name) => this.setState({ name: name })}
+            maxLength={15}
           />
 
           <View style={styles.colorSelectContainer}>{this.renderColors()}</View>

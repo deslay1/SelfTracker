@@ -147,7 +147,6 @@ export default class ItemListModal extends Component {
                       styles.closeModalText,
                       {
                         borderColor: list.color,
-                        color: Colors.tintColor,
                       },
                     ]}>
                     Close
