@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { View, Text, StyleSheet, TouchableHighlight, ActivityIndicator, ScrollView } from "react-native";
+import { View, Text, StyleSheet, TouchableHighlight, ActivityIndicator, ScrollView, Image } from "react-native";
 import { Input } from "react-native-elements";
 import Constants from "expo-constants";
 
@@ -27,6 +27,9 @@ export default class LoginScreen extends Component {
   render() {
     return (
       <ScrollView contentContainerStyle={styles.container}>
+        <View style={{ marginTop: 70 }}>
+          {/* <Image source={require("../assets/images/appLogo.png")} style={{ width: 200, height: 100 }} /> */}
+        </View>
         <ActivityIndicator animating={this.state.isLoading} />
         <View style={styles.formContainer}>
           <Input
@@ -64,10 +67,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center",
-    justifyContent: "center",
     marginTop: Constants.statusBarHeight,
   },
   formContainer: {
+    justifyContent: "center",
     marginTop: 32,
     marginHorizontal: 30,
     width: 300,
