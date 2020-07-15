@@ -3,6 +3,7 @@ import { View, Text, ActivityIndicator, StyleSheet } from "react-native";
 import firebase from "firebase";
 
 export default class LoginScreen extends Component {
+	public props: any;
   state = {
     isLoading: true,
   };

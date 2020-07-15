@@ -19,14 +19,16 @@ import { AntDesign, FontAwesome } from "@expo/vector-icons";
 import Colors from "../constants/Colors";
 
 export default class ItemListModal extends Component {
-  constructor(props) {
+  public props: any;
+  public setState: any;
+  constructor(props: any) {
     super(props);
     this.state = {
       newItem: "",
     };
   }
 
-  toggleItemCompleted = (index) => {
+  toggleItemCompleted = (index: number) => {
     let list = this.props.list;
     list.items[index].completed = !list.items[index].completed;
 
@@ -36,7 +38,7 @@ export default class ItemListModal extends Component {
   addItem = () => {
     let list = this.props.list;
 
-    if (!list.items.some((item) => item.title === this.state.newItem)) {
+    if (!list.items.some((item: any) => item.title === this.state.newItem)) {
       list.items.push({ title: this.state.newItem, completed: false });
       this.props.updateList(list);
     }
@@ -44,14 +46,14 @@ export default class ItemListModal extends Component {
     Keyboard.dismiss();
   };
 
-  deleteItem = (index) => {
+  deleteItem = (index: number) => {
     let list = this.props.list;
     list.items.splice(index, 1);
 
     this.props.updateList(list);
   };
 
-  alertDeleteList = (list) =>
+  alertDeleteList = (list: any) =>
     Alert.alert(
       "Delete List?",
       "Are you sure you want to delete this list?",
@@ -65,7 +67,7 @@ export default class ItemListModal extends Component {
       { cancelable: false }
     );
 
-  alertDeleteItem = (itemIndex) =>
+  alertDeleteItem = (itemIndex: number) =>
     Alert.alert(
       "Delete Item?",
       "Are you sure you want to delete this item?",
@@ -79,8 +81,9 @@ export default class ItemListModal extends Component {
       { cancelable: true }
     );
 
-  renderItem = (item, index) => {
+  renderItem = (item: any, index: number) => {
     return (
+      // @ts-ignore
       <Swipeable renderRightActions={(_, dragX) => this.rightActions(dragX, index)}>
         <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
           <View style={styles.itemContainer}>
@@ -114,7 +117,7 @@ export default class ItemListModal extends Component {
     );
   };
 
-  rightActions = (dragX, index) => {
+  rightActions = (dragX: number, index: number) => {
     <TouchableOpacity>
       <Animated.View>
         <Animated.Text>Delete</Animated.Text>
@@ -125,7 +128,7 @@ export default class ItemListModal extends Component {
   render() {
     const list = this.props.list;
     const itemCount = list.items.length;
-    const completedCount = list.items.filter((item) => item.completed).length;
+    const completedCount = list.items.filter((item: any) => item.completed).length;
     return (
       <KeyboardAvoidingView
         style={{ flex: 1 }}
@@ -135,7 +138,12 @@ export default class ItemListModal extends Component {
           <View style={[styles.section, styles.header]}>
             <View style={{ paddingBottom: 4, borderBottomWidth: 4, borderBottomColor: list.color }}>
               <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
-                <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                  }}>
                   <Text style={[styles.title, { color: list.color }]}>{list.name}</Text>
                   <TouchableOpacity onPress={() => this.alertDeleteList(list)}>
                     <FontAwesome name="trash" color={Colors.tintColor} size={24} />

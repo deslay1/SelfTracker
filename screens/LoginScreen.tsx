@@ -1,14 +1,17 @@
 import React, { Component } from "react";
-import { View, Text, StyleSheet, TouchableHighlight, ActivityIndicator, ScrollView, Image } from "react-native";
+import { View, Text, StyleSheet, TouchableHighlight, ActivityIndicator, ScrollView /* Image */ } from "react-native";
 import { Input } from "react-native-elements";
 import Constants from "expo-constants";
 
-import * as firebase from "firebase";
 import Fire from "../Fire";
 
 import Colors from "../constants/Colors";
 
 export default class LoginScreen extends Component {
+  public setState: any;
+  public props: any;
+  public email: any;
+  public password: any;
   static navigationOptions = {
     headerShown: false,
   };
@@ -18,10 +21,13 @@ export default class LoginScreen extends Component {
     errorMessage: null,
     isLoading: false,
   };
+
+  componentDidMount() {}
+
   login = () => {
     this.setState({ isLoading: true });
     const { email, password } = this.state;
-    Fire.shared.loginUser(email, password);
+    Fire.loginUser(email, password);
     this.setState({ isLoading: false });
   };
   render() {
@@ -30,26 +36,23 @@ export default class LoginScreen extends Component {
         <View style={{ marginTop: 70 }}>
           {/* <Image source={require("../assets/images/appLogo.png")} style={{ width: 200, height: 100 }} /> */}
         </View>
-        <ActivityIndicator animating={this.state.isLoading} />
         <View style={styles.formContainer}>
           <Input
             label={"Email"}
             onChangeText={(email) => this.setState({ email: email })}
-            shake={!this.state.error ? false : true}
             keyboardType="email-address"
             autoCapitalize="none"
           />
           <Input
             label={"Password"}
             onChangeText={(password) => this.setState({ password: password })}
-            shake={!this.state.error ? false : true}
             secureTextEntry={true}
             autoCapitalize="none"
           />
         </View>
         <View style={styles.buttonContainer}>
           <TouchableHighlight style={styles.button} onPress={this.login} underlayColor={Colors.underlayColor}>
-            <Text style={styles.buttonText}>Log In</Text>
+            {this.state.isLoading ? <ActivityIndicator /> : <Text style={styles.buttonText}>Log In</Text>}
           </TouchableHighlight>
           <TouchableHighlight
             style={styles.button}

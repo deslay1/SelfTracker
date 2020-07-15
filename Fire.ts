@@ -7,7 +7,21 @@ import UserController from "./controllers/UserController";
 import ListController from "./controllers/ListController";
 import MoodController from "./controllers/MoodController";
 
-class Fire {
+interface List {
+  name: string;
+  color: string;
+  items: any;
+  id?: string;
+}
+
+interface Mood {
+  day?: number;
+  color?: string;
+  text?: string;
+  id?: any;
+}
+
+class FireAPI {
   constructor() {
     if (!firebase.apps.length) {
       firebase.initializeApp(FirebaseKeys);
@@ -34,11 +48,11 @@ class Fire {
   }; */
 
   // User stuff
-  loginUser = (email, password) => {
+  loginUser = (email: string, password: string) => {
     UserController.loginUser(email, password);
   };
 
-  createUser = (user) => {
+  createUser = (user: any) => {
     UserController.createUser(user);
   };
 
@@ -55,19 +69,19 @@ class Fire {
     return (firebase.auth().currentUser || {}).uid;
   }
 
-  getLists(callback) {
+  getLists(callback: any) {
     ListController.getLists(callback);
   }
 
-  addList(list) {
+  addList(list: List) {
     ListController.addList(list);
   }
 
-  updateList(list) {
+  updateList(list: List) {
     ListController.updateList(list);
   }
 
-  deleteList(list) {
+  deleteList(list: List) {
     ListController.deleteList(list);
   }
 
@@ -75,7 +89,7 @@ class Fire {
     ListController.detach();
   }
 
-  getMoods(callback) {
+  getMoods(callback: any) {
     MoodController.getMoods(callback);
   }
 
@@ -83,15 +97,15 @@ class Fire {
     MoodController.addMood(mood, moodsUID);
   } */
 
-  addMood(mood) {
+  addMood(mood: Mood) {
     MoodController.addMood(mood);
   }
 
-  updateMood(mood, moodUID) {
+  updateMood(mood: Mood, moodUID: any) {
     MoodController.updateMood(mood, moodUID);
   }
 
-  deleteMood(mood) {
+  deleteMood(mood: Mood) {
     MoodController.deleteMood(mood);
   }
 
@@ -112,5 +126,6 @@ class Fire {
   }
 }
 
-Fire.shared = new Fire();
+//Fire.shared = new Fire();
+const Fire = new FireAPI();
 export default Fire;

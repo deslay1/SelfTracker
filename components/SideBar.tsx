@@ -1,12 +1,10 @@
 import React, { Component } from "react";
 import { View, Text, StyleSheet, ScrollView, ImageBackground, Image, TouchableHighlight } from "react-native";
 import { DrawerNavigatorItems } from "react-navigation-drawer";
-import { FontAwesome } from "@expo/vector-icons";
+//import { FontAwesome } from "@expo/vector-icons";
 import Colors from "../constants/Colors";
 
 import Fire from "../Fire";
-
-const user = "1";
 
 export default class Sidebar extends Component {
   state = {
@@ -14,12 +12,13 @@ export default class Sidebar extends Component {
     loading: false,
   };
 
-  userMount = null;
+  userMount = () => null;
 
   componentDidMount() {
-    const user = this.props.uid || Fire.shared.uid;
-
-    this.userMount = Fire.shared.firestore
+    // @ts-ignore
+    const user = this.props.uid || Fire.uid;
+    // @ts-ignore
+    this.userMount = Fire.firestore
       .collection("users")
       .doc(user)
       .onSnapshot(
@@ -27,12 +26,14 @@ export default class Sidebar extends Component {
           this.setState({ user: doc.data(), loading: true });
         },
         (error) => {
+          // @ts-ignore
           alert(error.message);
         }
       );
   }
 
   componentWillUnmount() {
+    Fire.detach();
     this.userMount();
   }
 
@@ -44,16 +45,15 @@ export default class Sidebar extends Component {
             <View>
               <Image
                 source={
+                  // @ts-ignore
                   this.state.user.image ? { uri: this.state.user.image } : require("../assets/images/catprofile.jpg")
                 }
                 style={styles.image}></Image>
+              {/* @ts-ignore*/}
               <Text style={styles.name}>{this.state.user.username}</Text>
             </View>
             <View style={styles.sidebarRight}>
-              <TouchableHighlight
-                style={styles.button}
-                onPress={Fire.shared.signOut}
-                underlayColor={Colors.underlayColor}>
+              <TouchableHighlight style={styles.button} onPress={Fire.signOut} underlayColor={Colors.underlayColor}>
                 <Text style={styles.buttonText}>Log Out</Text>
               </TouchableHighlight>
             </View>
@@ -61,6 +61,7 @@ export default class Sidebar extends Component {
         </ImageBackground>
 
         <View style={styles.container}>
+          {/* @ts-ignore*/}
           <DrawerNavigatorItems {...this.props} />
         </View>
       </ScrollView>

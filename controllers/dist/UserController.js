@@ -1,23 +1,4 @@
 "use strict";
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -54,26 +35,24 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-var firebase_1 = __importDefault(require("firebase"));
-Promise.resolve().then(function () { return __importStar(require("firebase/firestore")); });
+exports.__esModule = true;
+var firebase_1 = require("firebase");
+Promise.resolve().then(function () { return require("firebase/firestore"); });
 var UserController = /** @class */ (function () {
     function UserController() {
         var _this = this;
         this.loginUser = function (email, password) { return __awaiter(_this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 try {
-                    firebase_1.default
+                    firebase_1["default"]
                         .auth()
-                        .signInWithEmailAndPassword(email.trim(), password)
-                        .catch(function (error) {
+                        .signInWithEmailAndPassword(email.trim(), password)["catch"](function (error) {
+                        // @ts-ignore
                         alert(error.message);
                     });
                 }
                 catch (error) {
+                    // @ts-ignore
                     alert(error.message);
                 }
                 return [2 /*return*/];
@@ -93,8 +72,8 @@ var UserController = /** @class */ (function () {
                                     return [4 /*yield*/, response.blob()];
                                 case 2:
                                     file = _a.sent();
-                                    upload = firebase_1.default.storage().ref(filename).put(file);
-                                    upload.on("state_changed", function (snapshot) { }, function (err) {
+                                    upload = firebase_1["default"].storage().ref(filename).put(file);
+                                    upload.on("state_changed", function (err) {
                                         rej(err);
                                     }, function () { return __awaiter(_this, void 0, void 0, function () {
                                         var url;
@@ -120,10 +99,10 @@ var UserController = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         remoteUri = null;
-                        return [4 /*yield*/, firebase_1.default
+                        return [4 /*yield*/, firebase_1["default"]
                                 .auth()
-                                .createUserWithEmailAndPassword(user.email, user.password)
-                                .catch(function (error) {
+                                .createUserWithEmailAndPassword(user.email, user.password)["catch"](function (error) {
+                                // @ts-ignore
                                 alert(error.message);
                             })];
                     case 1:
@@ -136,7 +115,7 @@ var UserController = /** @class */ (function () {
                         db.set({
                             username: user.username,
                             email: user.email,
-                            image: null,
+                            image: null
                         });
                         if (!user.image) return [3 /*break*/, 4];
                         return [4 /*yield*/, this.uploadPhotoAsync(user.image, "images/" + this.uid)];
@@ -147,6 +126,7 @@ var UserController = /** @class */ (function () {
                     case 4: return [3 /*break*/, 6];
                     case 5:
                         error_1 = _a.sent();
+                        // @ts-ignore
                         alert(error_1.message);
                         return [3 /*break*/, 6];
                     case 6: return [2 /*return*/];
@@ -166,18 +146,18 @@ var UserController = /** @class */ (function () {
           return user;
         } */
         get: function () {
-            return firebase_1.default.firestore().collection("users");
+            return firebase_1["default"].firestore().collection("users");
         },
         enumerable: false,
         configurable: true
     });
     Object.defineProperty(UserController.prototype, "uid", {
         get: function () {
-            return (firebase_1.default.auth().currentUser || {}).uid;
+            return (firebase_1["default"].auth().currentUser || {}).uid;
         },
         enumerable: false,
         configurable: true
     });
     return UserController;
 }());
-exports.default = new UserController();
+exports["default"] = new UserController();

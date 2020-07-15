@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import { View, Text, StyleSheet, TouchableOpacity, Modal } from "react-native";
 
 import ItemListModal from "./ItemListModal";
-import { Colors } from "react-native/Libraries/NewAppScreen";
 
 export default class ItemList extends Component {
   state = {
@@ -14,16 +13,20 @@ export default class ItemList extends Component {
   };
 
   render() {
+    // @ts-ignore
     const list = this.props.list;
-    const completedCount = list.items.filter((item) => item.completed).length;
+    const completedCount = list.items.filter((item: any) => item.completed).length;
     const remainingCount = list.items.length - completedCount;
     return (
       <View style={[styles.container, { backgroundColor: list.color }]}>
         <Modal animationType="slide" visible={this.state.showListVisible} onRequestClose={() => this.toggleListModal()}>
           <ItemListModal
+            // @ts-ignore
             list={list}
             closeModal={() => this.toggleListModal()}
+            // @ts-ignore
             updateList={this.props.updateList}
+            // @ts-ignore
             deleteList={this.props.deleteList}
           />
         </Modal>

@@ -7,7 +7,7 @@ import {
   Image,
   TouchableOpacity,
   ScrollView,
-  Platform,
+  ActivityIndicator,
 } from "react-native";
 import { Input } from "react-native-elements";
 import { AntDesign } from "@expo/vector-icons";
@@ -21,6 +21,8 @@ import * as ImagePicker from "expo-image-picker";
 import Colors from "../constants/Colors";
 
 export default class RegisterScreen extends Component {
+  public setState: any;
+  public props: any;
   static navigationOptions = {
     headerShown: false,
   };
@@ -33,18 +35,23 @@ export default class RegisterScreen extends Component {
     },
     confirmPassword: "",
     errorMessage: null,
+    isLoading: false,
   };
   signUp = () => {
+    this.setState({ isLoading: true });
     const user = this.state.user;
     if (user.password.length < 6) {
+      // @ts-ignore
       alert("Password must be 6 characters long");
     } else {
       if (user.password === this.state.confirmPassword) {
-        Fire.shared.createUser(user);
+        Fire.createUser(user);
       } else {
+        // @ts-ignore
         alert("Passwords do not match");
       }
     }
+    this.setState({ isLoading: false });
   };
 
   pickImage = async () => {
@@ -71,6 +78,7 @@ export default class RegisterScreen extends Component {
           </TouchableOpacity>
           <TouchableOpacity style={styles.imagePlaceHolder} onPress={this.pickImage}>
             {this.state.user.image ? (
+              // @ts-ignore
               <Image source={{ uri: this.state.user.image }} style={styles.image} />
             ) : (
               <AntDesign name="adduser" size={32} color="#038887" style={{ marginTop: 10, marginLeft: 2 }} />
@@ -107,7 +115,7 @@ export default class RegisterScreen extends Component {
         </View>
         <View style={styles.buttonContainer}>
           <TouchableHighlight style={styles.button} onPress={this.signUp} underlayColor={Colors.underlayColor}>
-            <Text style={styles.buttonText}>Sign Up</Text>
+            {this.state.isLoading ? <ActivityIndicator /> : <Text style={styles.buttonText}>Sign Up</Text>}
           </TouchableHighlight>
         </View>
       </ScrollView>

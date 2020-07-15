@@ -15,30 +15,27 @@ var __extends = (this && this.__extends) || (function () {
 exports.__esModule = true;
 var react_1 = require("react");
 var react_native_1 = require("react-native");
-var Navigators_1 = require("./navigation/Navigators");
-var base_64_1 = require("base-64");
-if (!global.btoa) {
-    global.btoa = base_64_1.encode;
-}
-if (!global.atob) {
-    global.atob = base_64_1.decode;
-}
-var App = /** @class */ (function (_super) {
-    __extends(App, _super);
-    function App(props) {
-        return _super.call(this, props) || this;
+var TemporaryScreen = /** @class */ (function (_super) {
+    __extends(TemporaryScreen, _super);
+    function TemporaryScreen() {
+        return _super !== null && _super.apply(this, arguments) || this;
     }
-    App.prototype.render = function () {
-        return (<react_native_1.View style={styles.container}>
-        <Navigators_1["default"] />
-      </react_native_1.View>);
+    TemporaryScreen.prototype.render = function () {
+        return (react_1["default"].createElement(react_native_1.View, { style: styles.container },
+            react_1["default"].createElement(react_native_1.Text, null, "This is a temp screen")));
     };
-    return App;
+    return TemporaryScreen;
 }(react_1.Component));
-exports["default"] = App;
+exports["default"] = TemporaryScreen;
+// @ts-ignore
+TemporaryScreen.navigationOptions = {
+    headerShown: false
+};
 var styles = react_native_1.StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: "#fff"
+        backgroundColor: "#fff",
+        alignItems: "center",
+        justifyContent: "center"
     }
 });

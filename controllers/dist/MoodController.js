@@ -10,33 +10,13 @@ var __assign = (this && this.__assign) || function () {
     };
     return __assign.apply(this, arguments);
 };
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
+exports.__esModule = true;
 exports.now = void 0;
-var firebase_1 = __importDefault(require("firebase"));
-Promise.resolve().then(function () { return __importStar(require("firebase/firestore")); });
+var firebase_1 = require("firebase");
+Promise.resolve().then(function () { return require("firebase/firestore"); });
+// import moment from "moment";
 exports.now = null;
+// @ts-ignore
 unMount = function () { return null; };
 var MoodController = /** @class */ (function () {
     function MoodController() {
@@ -50,7 +30,8 @@ var MoodController = /** @class */ (function () {
         var moodsArray = [];
         this.unMount = moodsRef.onSnapshot(function (snapshot) {
             snapshot.forEach(function (doc) {
-                moodsArray.push(__assign({ id: doc.id }, doc.data()));
+                var mood = __assign({ id: doc.id }, doc.data());
+                moodsArray.push(mood);
             });
             callback(moodsArray);
         });
@@ -62,18 +43,18 @@ var MoodController = /** @class */ (function () {
         this.moodsCollection.doc(moodUID).update(mood);
     };
     MoodController.prototype.deleteMood = function (mood) {
-        this.moodsCollection.doc(mood.id).delete();
+        this.moodsCollection.doc(mood.id)["delete"]();
     };
     Object.defineProperty(MoodController.prototype, "moodsCollection", {
         get: function () {
-            return firebase_1.default.firestore().collection("users").doc(this.uid).collection("moods");
+            return firebase_1["default"].firestore().collection("users").doc(this.uid).collection("moods");
         },
         enumerable: false,
         configurable: true
     });
     Object.defineProperty(MoodController.prototype, "uid", {
         get: function () {
-            return (firebase_1.default.auth().currentUser || {}).uid;
+            return (firebase_1["default"].auth().currentUser || {}).uid;
         },
         enumerable: false,
         configurable: true
@@ -90,4 +71,4 @@ var MoodController = /** @class */ (function () {
     });
     return MoodController;
 }());
-exports.default = new MoodController();
+exports["default"] = new MoodController();

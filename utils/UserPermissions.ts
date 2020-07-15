@@ -3,10 +3,12 @@ import * as Permissions from "expo-permissions";
 
 class UserPermissions {
   getCameraPermission = async () => {
-    if (Constants.platform.ios || Constants.platform.android) {
+    const platform: any = Constants.platform;
+    if (platform.ios || platform.android) {
       const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
 
       if (status != "granted") {
+        // @ts-ignore
         alert("Permission to access camera roll is required to upload an image");
       }
     }

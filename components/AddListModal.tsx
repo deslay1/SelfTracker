@@ -1,10 +1,13 @@
 import React, { Component } from "react";
-import { View, Text, StyleSheet, TouchableOpacity, KeyboardAvoidingView, TextInput } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, KeyboardAvoidingView, TextInput, Platform } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
-import Colors from "../constants/Colors";
+//import Colors from "../constants/Colors";
 
 export default class AddListModal extends Component {
   backgroundColors = ["#5CD859", "#24A6D9", "#595BD9", "#8022D9", "#D159D8", "#D85963", "#D88559"];
+
+  public props: any;
+  public setState: any;
 
   state = {
     name: "",

@@ -10,7 +10,7 @@ export default class TemporaryScreen extends Component {
     );
   }
 }
-
+// @ts-ignore
 TemporaryScreen.navigationOptions = {
   headerShown: false,
 };

@@ -3,6 +3,8 @@ import { Text, View, StyleSheet, TouchableOpacity, TouchableHighlight, FlatList 
 import Colors from "../constants/Colors";
 
 export default class AddMoodModal extends Component {
+  public props: any;
+  public setState: any;
   state = {
     moods: [
       { id: 1, text: "Productive", color: "#4caf50" },
@@ -17,11 +19,11 @@ export default class AddMoodModal extends Component {
     ],
   };
 
-  addMood = (text) => {
+  addMood = (text: string) => {
     this.props.addMood(text);
   };
 
-  renderMood = (mood, index) => {
+  renderMood = (mood: any, index: number) => {
     return (
       <View style={styles.moodBox} key={mood.id}>
         <Text style={styles.moodText}>{mood.text}</Text>

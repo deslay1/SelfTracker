@@ -3,7 +3,7 @@ import { Feather } from "@expo/vector-icons";
 
 import Colors from "../constants/Colors";
 
-export default function TabIcon(props) {
+export default function TabIcon(props: any) {
   return (
     <Feather
       name={props.name}

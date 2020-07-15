@@ -16,8 +16,8 @@ import { Entypo } from "@expo/vector-icons";
 import firebase from "firebase";
 import Fire from "../Fire";
 import moment from "moment";
-import Notifications from "../Notifications";
-import * as Noty from "expo-notifications";
+// import Notifications from "../Notifications";
+// import * as Noty from "expo-notifications";
 
 import AddMoodModal from "../components/AddMoodModal";
 
@@ -44,7 +44,16 @@ const monthNames = [
   }),
 }); */
 
+interface Mood {
+  id: number;
+  color: string;
+  value: string;
+  moodID: number;
+  millis: number;
+}
+
 export default class MoodTrackerScreen extends Component {
+  public setState: any;
   state = {
     allMoods: [],
     date: new Date(),
@@ -53,17 +62,17 @@ export default class MoodTrackerScreen extends Component {
     largestMillis: 0,
     month: "",
     modalVisible: false,
-    activeDay: null,
-    monthID: null,
-    monthIndex: null,
+    activeDay: -1,
+    monthID: -1,
+    monthIndex: -1,
     year: "",
     today: 0,
     todayMillis: 0,
-    expoPushToken: null,
+    expoPushToken: -1,
   };
 
   componentDidMount() {
-    Fire.shared.getMoods((allMoods) => {
+    Fire.getMoods((allMoods: any) => {
       //const date = new Date();
       const date = this.state.date;
       const now = firebase.firestore.Timestamp.fromDate(date).toMillis();
@@ -71,8 +80,8 @@ export default class MoodTrackerScreen extends Component {
         allMoods: allMoods,
         date,
         todayMillis: now,
-        smallestMillis: Math.min(...allMoods.map((e) => e.day)),
-        largestMillis: Math.max(...allMoods.map((e) => e.day)),
+        smallestMillis: Math.min(...allMoods.map((e: any) => e.day)),
+        largestMillis: Math.max(...allMoods.map((e: any) => e.day)),
       });
       this.getDays(now);
       /*       Notifications.registerForPushNotificationsAsync().then((token) => {
@@ -91,32 +100,38 @@ export default class MoodTrackerScreen extends Component {
   }; */
 
   componentWillUnmount() {
-    Fire.shared.detachMood();
+    Fire.detachMood();
   }
 
-  getDays = (date) => {
+  getDays = (date: number) => {
     const allMoods = this.state.allMoods;
     const lowerLimit = moment(date).startOf("month").valueOf();
     const upperLimit = moment(date).endOf("month").valueOf();
-    const moods = allMoods.filter((e) => e.day < upperLimit && e.day >= lowerLimit);
+    const moods = allMoods.filter((e: any) => e.day < upperLimit && e.day >= lowerLimit);
     //console.log(moods);
 
     const monthDate = firebase.firestore.Timestamp.fromMillis(date).toDate();
     const month = monthDate.getMonth();
     const year = monthDate.getFullYear();
     const daysInMonth = moment(date).daysInMonth();
-
+    // @ts-ignore
     const days = [...Array(daysInMonth).keys()].map((e, i) => {
       const day = moment().format(Number(year) + " " + Number(month + 1) + " " + Number(i + 1));
       const dayDate = moment(day, "YYYY MM DD");
 
       const timestampProper = new firebase.firestore.Timestamp(dayDate.unix(), 0).toDate();
       const millis = firebase.firestore.Timestamp.fromDate(timestampProper).toMillis();
-      const el = { id: i + 1, value: i + 1, color: Colors.lightTintColor, millis };
+      const el = {
+        id: i + 1,
+        value: i + 1,
+        color: Colors.lightTintColor,
+        moodID: 0,
+        millis,
+      };
       return el;
     });
 
-    moods.map((e, i) => {
+    moods.map((e: any) => {
       const moodTimestamp = firebase.firestore.Timestamp.fromMillis(e.day).toDate();
       const moodDay = moodTimestamp.getDate();
       days.splice(moodDay - 1, 1, {
@@ -137,29 +152,29 @@ export default class MoodTrackerScreen extends Component {
     this.setState({ modalVisible: !this.state.modalVisible });
   }
 
-  addMood(moodColor) {
-    const days = this.state.days;
+  addMood(moodColor: string) {
+    const days: Mood[] = this.state.days;
     const index = this.state.activeDay;
-    const mood = days[index];
+    const mood: Mood = days[index];
     mood.color = moodColor;
     days[index] = mood;
 
-    if (mood.moodID) {
+    if (mood.moodID !== 0) {
       const toUpdate = { color: moodColor };
-      Fire.shared.updateMood(toUpdate, mood.moodID);
+      Fire.updateMood(toUpdate, mood.moodID);
     } else {
       const toAdd = { color: moodColor, text: mood.value, day: mood.millis };
       //Fire.shared.addMood(toAdd, this.state.monthID);
-      Fire.shared.addMood(toAdd);
+      Fire.addMood(toAdd);
     }
 
     this.setState({ days, modalVisible: !this.state.modalVisible });
   }
 
   changeToPreviousMonth = () => {
-    const index = this.state.monthIndex;
+    const index: number = this.state.monthIndex;
 
-    const date = this.state.date;
+    const date: any = this.state.date;
     date.setMonth(date.getMonth() - 1);
     this.getDays(date);
     if (index > 0) {
@@ -170,9 +185,9 @@ export default class MoodTrackerScreen extends Component {
   };
 
   changeToNextMonth = () => {
-    const index = this.state.monthIndex;
+    const index: number = this.state.monthIndex;
 
-    const date = this.state.date;
+    const date: any = this.state.date;
     date.setMonth(date.getMonth() + 1);
     this.getDays(date);
     if (index < 11) {
@@ -182,7 +197,7 @@ export default class MoodTrackerScreen extends Component {
     }
   };
 
-  renderDay = (item, index) => {
+  renderDay = (item: Mood, index: number) => {
     return (
       <View>
         <StatusBar />
@@ -237,13 +252,13 @@ export default class MoodTrackerScreen extends Component {
           <Modal animationType="slide" visible={this.state.modalVisible} onRequestClose={() => this.toggleAddMood()}>
             <AddMoodModal
               closeModal={() => this.toggleAddMood()}
-              addMood={(mood) => this.addMood(mood)}
+              addMood={(mood: string) => this.addMood(mood)}
               day={this.state.days[this.state.activeDay]}
             />
           </Modal>
           <FlatList
             data={this.state.days}
-            keyExtractor={(day) => day.id}
+            keyExtractor={(day: any) => day.id}
             numColumns={3}
             renderItem={({ item, index }) => this.renderDay(item, index)}
             showsVerticalScrollIndicator={false}
@@ -253,7 +268,7 @@ export default class MoodTrackerScreen extends Component {
     );
   }
 }
-
+// @ts-ignore
 MoodTrackerScreen.navigationOptions = {
   headerShown: false,
 };
@@ -270,7 +285,9 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.lightTintColor,
     marginHorizontal: 10,
     borderRadius: 16,
+    // @ts-ignore
     marginTop: Platform.OS === "android" ? StatusBar.currentHeight : 40,
+    // @ts-ignore
     marginBottom: Platform.OS === "android" ? StatusBar.currentHeight / 2 : 20,
     padding: 10,
   },
@@ -278,7 +295,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontFamily: Platform.OS === "android" ? "Roboto" : "Avenir",
     fontWeight: "bold",
-    textShadowOffset: { 4: 10 },
+    textShadowOffset: { width: 4, height: 10 },
     textTransform: "capitalize",
   },
   headerImage: {

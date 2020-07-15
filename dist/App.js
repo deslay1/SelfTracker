@@ -17,10 +17,14 @@ var react_1 = require("react");
 var react_native_1 = require("react-native");
 var Navigators_1 = require("./navigation/Navigators");
 var base_64_1 = require("base-64");
+// @ts-ignore
 if (!global.btoa) {
+    // @ts-ignore
     global.btoa = base_64_1.encode;
 }
+// @ts-ignore
 if (!global.atob) {
+    // @ts-ignore
     global.atob = base_64_1.decode;
 }
 var App = /** @class */ (function (_super) {
@@ -29,9 +33,8 @@ var App = /** @class */ (function (_super) {
         return _super.call(this, props) || this;
     }
     App.prototype.render = function () {
-        return (<react_native_1.View style={styles.container}>
-        <Navigators_1["default"] />
-      </react_native_1.View>);
+        return (react_1["default"].createElement(react_native_1.View, { style: styles.container },
+            react_1["default"].createElement(Navigators_1["default"], null)));
     };
     return App;
 }(react_1.Component));
