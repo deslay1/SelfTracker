@@ -29,6 +29,7 @@ var react_native_1 = require("react-native");
 var react_navigation_drawer_1 = require("react-navigation-drawer");
 //import { FontAwesome } from "@expo/vector-icons";
 var Colors_1 = require("../constants/Colors");
+var expo_constants_1 = require("expo-constants");
 var Fire_1 = require("../Fire");
 var Sidebar = /** @class */ (function (_super) {
     __extends(Sidebar, _super);
@@ -64,7 +65,7 @@ var Sidebar = /** @class */ (function (_super) {
         return (react_1["default"].createElement(react_native_1.ScrollView, { style: styles.container },
             react_1["default"].createElement(react_native_1.ImageBackground, { source: require("../assets/images/sidebar2.jpg"), style: styles.imageBackground },
                 react_1["default"].createElement(react_native_1.View, { style: styles.sidebarItems },
-                    react_1["default"].createElement(react_native_1.View, null,
+                    react_1["default"].createElement(react_native_1.View, { style: { alignItems: "center" } },
                         react_1["default"].createElement(react_native_1.Image, { source: 
                             // @ts-ignore
                             this.state.user.image ? { uri: this.state.user.image } : require("../assets/images/catprofile.jpg"), style: styles.image }),
@@ -84,14 +85,15 @@ var styles = react_native_1.StyleSheet.create({
     },
     sidebarItems: {
         flexDirection: "row",
-        justifyContent: "space-between"
+        justifyContent: "space-between",
+        marginHorizontal: "3%",
+        paddingTop: expo_constants_1["default"].statusBarHeight
     },
     sidebarRight: {
         justifyContent: "flex-end"
     },
     imageBackground: {
-        padding: 16,
-        paddingTop: 50
+        padding: 16
     },
     image: {
         width: 80,

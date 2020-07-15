@@ -33,13 +33,13 @@ var AddMoodModal = /** @class */ (function (_super) {
                 { id: 9, text: "Indifferent", color: "black" },
             ]
         };
-        _this.addMood = function (text) {
-            _this.props.addMood(text);
+        _this.addMood = function (color, text) {
+            _this.props.addMood(color, text);
         };
         _this.renderMood = function (mood, index) {
             return (react_1["default"].createElement(react_native_1.View, { style: styles.moodBox, key: mood.id },
                 react_1["default"].createElement(react_native_1.Text, { style: styles.moodText }, mood.text),
-                react_1["default"].createElement(react_native_1.TouchableOpacity, { style: [styles.mood, { backgroundColor: mood.color }], onPress: function () { return _this.addMood(mood.color); } })));
+                react_1["default"].createElement(react_native_1.TouchableOpacity, { style: [styles.mood, { backgroundColor: mood.color }], onPress: function () { return _this.addMood(mood.color, mood.text); } })));
         };
         return _this;
     }

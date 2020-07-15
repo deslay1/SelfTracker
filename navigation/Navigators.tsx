@@ -10,7 +10,7 @@ import { createDrawerNavigator } from "react-navigation-drawer";
 // Screens
 import ListMenuScreen from "../screens/ListMenuScreen";
 import MoodTrackerScreen from "../screens/MoodTrackerScreen";
-import TemporaryScreen from "../screens/TemporaryScreen";
+import MoodStatisticsScreen from "../screens/MoodStatisticsScreen";
 
 import LoginScreen from "../screens/LoginScreen";
 import RegisterScreen from "../screens/RegisterScreen";
@@ -64,8 +64,8 @@ const TabNavigator = createBottomTabNavigator(
   }
 );
 
-const TemporaryStack = createStackNavigator({
-  Temporary: TemporaryScreen,
+const MoodStatisticsStack = createStackNavigator({
+  MoodStats: MoodStatisticsScreen,
 });
 
 const Drawernavigator = createDrawerNavigator(
@@ -78,9 +78,9 @@ const Drawernavigator = createDrawerNavigator(
       },
     },
     TemporaryStack: {
-      screen: TemporaryStack,
+      screen: MoodStatisticsStack,
       navigationOptions: {
-        title: "Profile",
+        title: "Mood Statistics",
         drawerIcon: ({ tintColor }) => <Feather name="user" size={20} color={tintColor} />,
       },
     },

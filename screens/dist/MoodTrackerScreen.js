@@ -24,6 +24,8 @@ var react_1 = require("react");
 var react_native_1 = require("react-native");
 var Colors_1 = require("../constants/Colors");
 var vector_icons_1 = require("@expo/vector-icons");
+var expo_constants_1 = require("expo-constants");
+var DrawerButton_1 = require("../components/DrawerButton");
 var firebase_1 = require("firebase");
 var Fire_1 = require("../Fire");
 var moment_1 = require("moment");
@@ -159,6 +161,7 @@ var MoodTrackerScreen = /** @class */ (function (_super) {
     }
     MoodTrackerScreen.prototype.componentDidMount = function () {
         var _this = this;
+        // @ts-ignore
         Fire_1["default"].getMoods(function (allMoods) {
             //const date = new Date();
             var date = _this.state.date;
@@ -189,14 +192,15 @@ var MoodTrackerScreen = /** @class */ (function (_super) {
     MoodTrackerScreen.prototype.toggleAddMood = function () {
         this.setState({ modalVisible: !this.state.modalVisible });
     };
-    MoodTrackerScreen.prototype.addMood = function (moodColor) {
+    MoodTrackerScreen.prototype.addMood = function (moodColor, moodText) {
         var days = this.state.days;
         var index = this.state.activeDay;
         var mood = days[index];
         mood.color = moodColor;
+        mood.value = moodText;
         days[index] = mood;
         if (mood.moodID !== 0) {
-            var toUpdate = { color: moodColor };
+            var toUpdate = { color: moodColor, text: moodText };
             Fire_1["default"].updateMood(toUpdate, mood.moodID);
         }
         else {
@@ -211,18 +215,19 @@ var MoodTrackerScreen = /** @class */ (function (_super) {
         return (react_1["default"].createElement(react_native_1.View, { style: styles.container },
             react_1["default"].createElement(react_native_1.ImageBackground, { source: require("../assets/images/header.jpg"), style: styles.headerImage },
                 react_1["default"].createElement(react_native_1.View, { style: styles.headerContainer },
-                    react_1["default"].createElement(react_native_1.TouchableOpacity, { style: { paddingHorizontal: 10 }, onPress: function () { return _this.changeToPreviousMonth(); } },
+                    react_1["default"].createElement(react_native_1.TouchableOpacity, { style: { paddingHorizontal: "1%" }, onPress: function () { return _this.changeToPreviousMonth(); } },
                         react_1["default"].createElement(vector_icons_1.Entypo, { name: "arrow-with-circle-left", size: 32 })),
                     react_1["default"].createElement(react_native_1.Text, { style: styles.header },
                         "Moods: ",
                         this.state.month + " " + this.state.year,
                         " "),
-                    react_1["default"].createElement(react_native_1.TouchableOpacity, { style: { paddingHorizontal: 10 }, onPress: function () { return _this.changeToNextMonth(); } },
-                        react_1["default"].createElement(vector_icons_1.Entypo, { name: "arrow-with-circle-right", size: 32 })))),
+                    react_1["default"].createElement(react_native_1.TouchableOpacity, { style: { paddingHorizontal: "1%" }, onPress: function () { return _this.changeToNextMonth(); } },
+                        react_1["default"].createElement(vector_icons_1.Entypo, { name: "arrow-with-circle-right", size: 32 })),
+                    react_1["default"].createElement(DrawerButton_1["default"], { navigation: this.props.navigation }))),
             react_1["default"].createElement(react_native_1.View, { style: styles.contentContainer },
                 react_1["default"].createElement(react_native_1.Modal, { animationType: "slide", visible: this.state.modalVisible, onRequestClose: function () { return _this.toggleAddMood(); } },
-                    react_1["default"].createElement(AddMoodModal_1["default"], { closeModal: function () { return _this.toggleAddMood(); }, addMood: function (mood) { return _this.addMood(mood); }, day: this.state.days[this.state.activeDay] })),
-                react_1["default"].createElement(react_native_1.FlatList, { data: this.state.days, keyExtractor: function (day) { return day.id; }, numColumns: 3, renderItem: function (_a) {
+                    react_1["default"].createElement(AddMoodModal_1["default"], { closeModal: function () { return _this.toggleAddMood(); }, addMood: function (moodColor, moodText) { return _this.addMood(moodColor, moodText); }, day: this.state.days[this.state.activeDay] })),
+                react_1["default"].createElement(react_native_1.FlatList, { data: this.state.days, keyExtractor: function (day) { return day.millis; }, numColumns: 3, renderItem: function (_a) {
                         var item = _a.item, index = _a.index;
                         return _this.renderDay(item, index);
                     }, showsVerticalScrollIndicator: false }))));
@@ -246,10 +251,8 @@ var styles = react_native_1.StyleSheet.create({
         backgroundColor: Colors_1["default"].lightTintColor,
         marginHorizontal: 10,
         borderRadius: 16,
-        // @ts-ignore
-        marginTop: react_native_1.Platform.OS === "android" ? react_native_1.StatusBar.currentHeight : 40,
-        // @ts-ignore
-        marginBottom: react_native_1.Platform.OS === "android" ? react_native_1.StatusBar.currentHeight / 2 : 20,
+        marginTop: expo_constants_1["default"].statusBarHeight,
+        marginBottom: 0.5 * expo_constants_1["default"].statusBarHeight,
         padding: 10
     },
     header: {

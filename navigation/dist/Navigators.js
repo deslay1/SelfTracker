@@ -21,7 +21,7 @@ var react_navigation_drawer_1 = require("react-navigation-drawer");
 // Screens
 var ListMenuScreen_1 = require("../screens/ListMenuScreen");
 var MoodTrackerScreen_1 = require("../screens/MoodTrackerScreen");
-var TemporaryScreen_1 = require("../screens/TemporaryScreen");
+var MoodStatisticsScreen_1 = require("../screens/MoodStatisticsScreen");
 var LoginScreen_1 = require("../screens/LoginScreen");
 var RegisterScreen_1 = require("../screens/RegisterScreen");
 var LoadingScreen_1 = require("../screens/LoadingScreen");
@@ -63,8 +63,8 @@ var TabNavigator = react_navigation_tabs_1.createBottomTabNavigator({
         style: { height: 50 }
     }
 });
-var TemporaryStack = react_navigation_stack_1.createStackNavigator({
-    Temporary: TemporaryScreen_1["default"]
+var MoodStatisticsStack = react_navigation_stack_1.createStackNavigator({
+    MoodStats: MoodStatisticsScreen_1["default"]
 });
 var Drawernavigator = react_navigation_drawer_1.createDrawerNavigator({
     TabNavigator: {
@@ -78,9 +78,9 @@ var Drawernavigator = react_navigation_drawer_1.createDrawerNavigator({
         }
     },
     TemporaryStack: {
-        screen: TemporaryStack,
+        screen: MoodStatisticsStack,
         navigationOptions: {
-            title: "Profile",
+            title: "Mood Statistics",
             drawerIcon: function (_a) {
                 var tintColor = _a.tintColor;
                 return react_1["default"].createElement(vector_icons_1.Feather, { name: "user", size: 20, color: tintColor });

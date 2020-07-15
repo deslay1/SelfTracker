@@ -19,8 +19,8 @@ export default class AddMoodModal extends Component {
     ],
   };
 
-  addMood = (text: string) => {
-    this.props.addMood(text);
+  addMood = (color: string, text: string) => {
+    this.props.addMood(color, text);
   };
 
   renderMood = (mood: any, index: number) => {
@@ -29,7 +29,7 @@ export default class AddMoodModal extends Component {
         <Text style={styles.moodText}>{mood.text}</Text>
         <TouchableOpacity
           style={[styles.mood, { backgroundColor: mood.color }]}
-          onPress={() => this.addMood(mood.color)}></TouchableOpacity>
+          onPress={() => this.addMood(mood.color, mood.text)}></TouchableOpacity>
       </View>
     );
   };

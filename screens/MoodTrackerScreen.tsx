@@ -12,6 +12,8 @@ import {
 } from "react-native";
 import Colors from "../constants/Colors";
 import { Entypo } from "@expo/vector-icons";
+import Constants from "expo-constants";
+import DrawerButton from "../components/DrawerButton";
 
 import firebase from "firebase";
 import Fire from "../Fire";
@@ -72,6 +74,7 @@ export default class MoodTrackerScreen extends Component {
   };
 
   componentDidMount() {
+    // @ts-ignore
     Fire.getMoods((allMoods: any) => {
       //const date = new Date();
       const date = this.state.date;
@@ -152,15 +155,16 @@ export default class MoodTrackerScreen extends Component {
     this.setState({ modalVisible: !this.state.modalVisible });
   }
 
-  addMood(moodColor: string) {
+  addMood(moodColor: string, moodText: string) {
     const days: Mood[] = this.state.days;
     const index = this.state.activeDay;
     const mood: Mood = days[index];
     mood.color = moodColor;
+    mood.value = moodText;
     days[index] = mood;
 
     if (mood.moodID !== 0) {
-      const toUpdate = { color: moodColor };
+      const toUpdate = { color: moodColor, text: moodText };
       Fire.updateMood(toUpdate, mood.moodID);
     } else {
       const toAdd = { color: moodColor, text: mood.value, day: mood.millis };
@@ -239,26 +243,28 @@ export default class MoodTrackerScreen extends Component {
       <View style={styles.container}>
         <ImageBackground source={require("../assets/images/header.jpg")} style={styles.headerImage}>
           <View style={styles.headerContainer}>
-            <TouchableOpacity style={{ paddingHorizontal: 10 }} onPress={() => this.changeToPreviousMonth()}>
+            <TouchableOpacity style={{ paddingHorizontal: "1%" }} onPress={() => this.changeToPreviousMonth()}>
               <Entypo name="arrow-with-circle-left" size={32} />
             </TouchableOpacity>
             <Text style={styles.header}>Moods: {this.state.month + " " + this.state.year} </Text>
-            <TouchableOpacity style={{ paddingHorizontal: 10 }} onPress={() => this.changeToNextMonth()}>
+            <TouchableOpacity style={{ paddingHorizontal: "1%" }} onPress={() => this.changeToNextMonth()}>
               <Entypo name="arrow-with-circle-right" size={32} />
             </TouchableOpacity>
+            {/* @ts-ignore */}
+            <DrawerButton navigation={this.props.navigation} />
           </View>
         </ImageBackground>
         <View style={styles.contentContainer}>
           <Modal animationType="slide" visible={this.state.modalVisible} onRequestClose={() => this.toggleAddMood()}>
             <AddMoodModal
               closeModal={() => this.toggleAddMood()}
-              addMood={(mood: string) => this.addMood(mood)}
+              addMood={(moodColor: string, moodText: string) => this.addMood(moodColor, moodText)}
               day={this.state.days[this.state.activeDay]}
             />
           </Modal>
           <FlatList
             data={this.state.days}
-            keyExtractor={(day: any) => day.id}
+            keyExtractor={(day: any) => day.millis}
             numColumns={3}
             renderItem={({ item, index }) => this.renderDay(item, index)}
             showsVerticalScrollIndicator={false}
@@ -285,10 +291,8 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.lightTintColor,
     marginHorizontal: 10,
     borderRadius: 16,
-    // @ts-ignore
-    marginTop: Platform.OS === "android" ? StatusBar.currentHeight : 40,
-    // @ts-ignore
-    marginBottom: Platform.OS === "android" ? StatusBar.currentHeight / 2 : 20,
+    marginTop: Constants.statusBarHeight,
+    marginBottom: 0.5 * Constants.statusBarHeight,
     padding: 10,
   },
   header: {

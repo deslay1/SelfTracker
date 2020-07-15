@@ -15,6 +15,7 @@ var __extends = (this && this.__extends) || (function () {
 exports.__esModule = true;
 var react_1 = require("react");
 var react_native_1 = require("react-native");
+var expo_constants_1 = require("expo-constants");
 var Fire_1 = require("../Fire");
 var DrawerButton_1 = require("../components/DrawerButton");
 var AddListModal_1 = require("../components/AddListModal");
@@ -35,6 +36,7 @@ var ListMenuScreen = /** @class */ (function (_super) {
         // @ts-ignore
         _this.unMount = function () { return null; };
         _this.renderList = function (list) {
+            // @ts-ignore
             return react_1["default"].createElement(ItemList_1["default"], { list: list, updateList: _this.updateList, deleteList: _this.deleteList });
         };
         _this.addList = function (list) {
@@ -139,10 +141,9 @@ var styles = react_native_1.StyleSheet.create({
     header: {
         flexDirection: "row",
         justifyContent: "space-between",
-        paddingHorizontal: 15,
-        // @ts-ignore
-        paddingTop: react_native_1.Platform.OS === "android" ? 1.5 * react_native_1.StatusBar.currentHeight : 40,
-        paddingBottom: 12,
+        paddingHorizontal: "8%",
+        paddingTop: 1 * expo_constants_1["default"].statusBarHeight,
+        paddingBottom: 0.5 * expo_constants_1["default"].statusBarHeight,
         backgroundColor: "#FFF",
         borderBottomWidth: 2,
         borderBottomColor: "#EBECF4",
@@ -154,7 +155,6 @@ var styles = react_native_1.StyleSheet.create({
         zIndex: 2
     },
     headerTitle: {
-        marginLeft: 30,
         fontSize: 24,
         fontWeight: "bold"
     },

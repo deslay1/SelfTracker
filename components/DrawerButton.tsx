@@ -1,6 +1,7 @@
 import React, { Component } from "react";
-import { View, Text, StyleSheet, SafeAreaView, TouchableOpacity } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
+import Colors from "../constants/Colors";
 
 import { DrawerActions } from "react-navigation-drawer";
 
@@ -11,9 +12,11 @@ export default class DrawerButton extends Component {
   }
   render() {
     return (
-      // @ts-ignore
-      <TouchableOpacity onPress={() => this.props.navigation.dispatch(DrawerActions.openDrawer())}>
-        <FontAwesome name="bars" size={32} colors="black" />
+      <TouchableOpacity
+        style={styles.container}
+        // @ts-ignore
+        onPress={() => this.props.navigation.dispatch(DrawerActions.openDrawer())}>
+        <FontAwesome name="bars" size={32} color={Colors.tintColor} />
       </TouchableOpacity>
     );
   }
@@ -21,8 +24,11 @@ export default class DrawerButton extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    alignItems: "flex-end",
-    marginRight: 30,
+    alignItems: "center",
+    marginLeft: "2%",
+    padding: 3,
+    borderRadius: 8,
+    //backgroundColor: "#FFF",
   },
   text: {
     fontSize: 14,

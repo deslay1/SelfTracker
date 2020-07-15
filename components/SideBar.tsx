@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, ScrollView, ImageBackground, Image, TouchableHi
 import { DrawerNavigatorItems } from "react-navigation-drawer";
 //import { FontAwesome } from "@expo/vector-icons";
 import Colors from "../constants/Colors";
+import Constants from "expo-constants";
 
 import Fire from "../Fire";
 
@@ -42,7 +43,7 @@ export default class Sidebar extends Component {
       <ScrollView style={styles.container}>
         <ImageBackground source={require("../assets/images/sidebar2.jpg")} style={styles.imageBackground}>
           <View style={styles.sidebarItems}>
-            <View>
+            <View style={{ alignItems: "center" }}>
               <Image
                 source={
                   // @ts-ignore
@@ -76,13 +77,14 @@ const styles = StyleSheet.create({
   sidebarItems: {
     flexDirection: "row",
     justifyContent: "space-between",
+    marginHorizontal: "3%",
+    paddingTop: Constants.statusBarHeight,
   },
   sidebarRight: {
     justifyContent: "flex-end",
   },
   imageBackground: {
     padding: 16,
-    paddingTop: 50,
   },
   image: {
     width: 80,

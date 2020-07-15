@@ -1,15 +1,6 @@
 import React, { Component } from "react";
-import {
-  View,
-  Text,
-  FlatList,
-  StyleSheet,
-  TouchableOpacity,
-  Modal,
-  ActivityIndicator,
-  StatusBar,
-  Platform,
-} from "react-native";
+import { View, Text, FlatList, StyleSheet, TouchableOpacity, Modal, ActivityIndicator } from "react-native";
+import Constants from "expo-constants";
 
 import Fire from "../Fire";
 
@@ -83,6 +74,7 @@ export default class ListMenuScreen extends Component {
   }
 
   renderList = (list: List) => {
+    // @ts-ignore
     return <ItemList list={list} updateList={this.updateList} deleteList={this.deleteList} />;
   };
 
@@ -113,6 +105,7 @@ export default class ListMenuScreen extends Component {
         </Modal>
         <View style={styles.header}>
           <Text style={styles.headerTitle}>{this.props.navigation.title}My Lists</Text>
+          {/* @ts-ignore */}
           <DrawerButton navigation={this.props.navigation} screen={"MENU"} unMount={this.unMount()} />
         </View>
 
@@ -169,10 +162,9 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: "row",
     justifyContent: "space-between",
-    paddingHorizontal: 15,
-    // @ts-ignore
-    paddingTop: Platform.OS === "android" ? 1.5 * StatusBar.currentHeight : 40,
-    paddingBottom: 12,
+    paddingHorizontal: "8%",
+    paddingTop: 1 * Constants.statusBarHeight,
+    paddingBottom: 0.5 * Constants.statusBarHeight,
     backgroundColor: "#FFF",
     borderBottomWidth: 2,
     borderBottomColor: "#EBECF4",
@@ -184,7 +176,6 @@ const styles = StyleSheet.create({
     zIndex: 2,
   },
   headerTitle: {
-    marginLeft: 30,
     fontSize: 24,
     fontWeight: "bold",
   },
