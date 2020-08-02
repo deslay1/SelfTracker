@@ -33,8 +33,9 @@ export default class LoginScreen extends Component {
   render() {
     return (
       <ScrollView contentContainerStyle={styles.container}>
-        <View style={{ marginTop: 70 }}>
+        <View style={{ marginTop: 70, marginBottom: 30 }}>
           {/* <Image source={require("../assets/images/appLogo.png")} style={{ width: 200, height: 100 }} /> */}
+          <Text style={styles.headerText}>SelfTracker</Text>
         </View>
         <View style={styles.formContainer}>
           <Input
@@ -71,6 +72,11 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     marginTop: Constants.statusBarHeight,
+  },
+  headerText: {
+    fontSize: 32,
+    fontFamily: "sans-serif",
+    fontWeight: "500",
   },
   formContainer: {
     justifyContent: "center",

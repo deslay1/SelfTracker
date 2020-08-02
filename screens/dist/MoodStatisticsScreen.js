@@ -12,6 +12,13 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
+var __spreadArrays = (this && this.__spreadArrays) || function () {
+    for (var s = 0, i = 0, il = arguments.length; i < il; i++) s += arguments[i].length;
+    for (var r = Array(s), k = 0, i = 0; i < il; i++)
+        for (var a = arguments[i], j = 0, jl = a.length; j < jl; j++, k++)
+            r[k] = a[j];
+    return r;
+};
 exports.__esModule = true;
 var react_1 = require("react");
 var react_native_1 = require("react-native");
@@ -19,24 +26,32 @@ var DrawerButton_1 = require("../components/DrawerButton");
 var expo_constants_1 = require("expo-constants");
 var Colors_1 = require("../constants/Colors");
 var Fire_1 = require("../Fire");
-var moods = [
-    { id: 1, text: "Productive", color: "#4caf50", count: 0 },
-    { id: 2, text: "Relaxed", color: "#2196f3", count: 0 },
-    { id: 3, text: "Ambitious", color: "red", count: 0 },
-    { id: 4, text: "Stressed", color: "#ff5722", count: 0 },
-    { id: 5, text: "Happy", color: "#ffeb3b", count: 0 },
-    { id: 6, text: "Sad", color: "purple", count: 0 },
-    { id: 7, text: "Bored", color: "darkgrey", count: 0 },
-    { id: 8, text: "Excited", color: "skyblue", count: 0 },
-    { id: 9, text: "Indifferent", color: "black", count: 0 },
-];
+var moods_1 = require("../utils/moods");
 var TemporaryScreen = /** @class */ (function (_super) {
     __extends(TemporaryScreen, _super);
     function TemporaryScreen() {
         var _this = _super !== null && _super.apply(this, arguments) || this;
         _this.state = {
             allMoods: [],
-            moods: moods
+            moods: moods_1["default"],
+            loading: true,
+            refreshing: false
+        };
+        _this.makeUnique = function (data, key) {
+            return __spreadArrays(new Map(data.map(function (x) { return [key(x), x]; })).values());
+        };
+        _this.resetMoodCounts = function () {
+            var moodsReset = _this.state.moods.map(function (e) {
+                e.count = 0;
+                return e;
+            });
+            _this.setState({ moods: moodsReset, isLoading: false });
+        };
+        _this.onRefresh = function () {
+            _this.setState({ refreshing: true });
+            setTimeout(function () {
+                _this.setState({ refreshing: false });
+            }, 2000);
         };
         _this.renderMood = function (lower, upper) {
             return _this.state.moods.slice(lower, upper).map(function (mood) {
@@ -58,15 +73,19 @@ var TemporaryScreen = /** @class */ (function (_super) {
             ).toDate();
             const moodDay = moodTimestamp.getDate();
             console.log(moodDay); */
-            allMoods.map(function (mood) {
+            // To keep from adding on to the count cause callback from firestore is always fired whenever changes are made to the database
+            _this.resetMoodCounts();
+            var unique = _this.makeUnique(allMoods, function (mood) { return mood.day; });
+            unique.map(function (mood) {
                 var stateMoods = _this.state.moods;
-                var moodsFiltered = stateMoods.map(function (e) { return e.text; });
-                var moodIndex = moodsFiltered.indexOf(mood.text);
+                var moodTypes = stateMoods.map(function (e) { return e.text; });
+                var moodIndex = moodTypes.indexOf(mood.text);
                 stateMoods[moodIndex].count++;
                 _this.setState({ moods: stateMoods.sort(function (a, b) { return b.count - a.count; }) });
             });
             _this.setState({
-                allMoods: allMoods
+                allMoods: allMoods,
+                loading: false
             });
         });
     };
@@ -81,10 +100,10 @@ var TemporaryScreen = /** @class */ (function (_super) {
                     "Mood Statistics"),
                 react_1["default"].createElement(react_native_1.View, { style: { paddingLeft: "10%" } },
                     react_1["default"].createElement(DrawerButton_1["default"], { navigation: this.props.navigation }))),
-            react_1["default"].createElement(react_native_1.ScrollView, { contentContainerStyle: styles.content },
+            !this.state.loading && (react_1["default"].createElement(react_native_1.ScrollView, { contentContainerStyle: styles.content, refreshControl: react_1["default"].createElement(react_native_1.RefreshControl, { refreshing: this.state.refreshing, onRefresh: this.onRefresh }) },
                 react_1["default"].createElement(react_native_1.View, { style: { flexDirection: "row" } }, this.renderMood(0, 3)),
                 react_1["default"].createElement(react_native_1.View, { style: { flexDirection: "row" } }, this.renderMood(3, 6)),
-                react_1["default"].createElement(react_native_1.View, { style: { flexDirection: "row" } }, this.renderMood(6, 9)))));
+                react_1["default"].createElement(react_native_1.View, { style: { flexDirection: "row" } }, this.renderMood(6, 9))))));
     };
     return TemporaryScreen;
 }(react_1.Component));

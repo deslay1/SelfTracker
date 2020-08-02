@@ -41,7 +41,8 @@ var LoginScreen = /** @class */ (function (_super) {
     LoginScreen.prototype.render = function () {
         var _this = this;
         return (react_1["default"].createElement(react_native_1.ScrollView, { contentContainerStyle: styles.container },
-            react_1["default"].createElement(react_native_1.View, { style: { marginTop: 70 } }),
+            react_1["default"].createElement(react_native_1.View, { style: { marginTop: 70, marginBottom: 30 } },
+                react_1["default"].createElement(react_native_1.Text, { style: styles.headerText }, "SelfTracker")),
             react_1["default"].createElement(react_native_1.View, { style: styles.formContainer },
                 react_1["default"].createElement(react_native_elements_1.Input, { label: "Email", onChangeText: function (email) { return _this.setState({ email: email }); }, keyboardType: "email-address", autoCapitalize: "none" }),
                 react_1["default"].createElement(react_native_elements_1.Input, { label: "Password", onChangeText: function (password) { return _this.setState({ password: password }); }, secureTextEntry: true, autoCapitalize: "none" })),
@@ -61,6 +62,11 @@ var styles = react_native_1.StyleSheet.create({
         flex: 1,
         alignItems: "center",
         marginTop: expo_constants_1["default"].statusBarHeight
+    },
+    headerText: {
+        fontSize: 32,
+        fontFamily: "sans-serif",
+        fontWeight: "500"
     },
     formContainer: {
         justifyContent: "center",

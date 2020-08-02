@@ -23,6 +23,7 @@
     ],
     "ios": {
       "supportsTablet": true
-    }
+    },
+    "description": "Users can create an account and do two main things:\n- Add, edit and remove todo lists\n- Keep track of their daily moods in monthly calendars. There is an additional screen to see the overall statistics."
   }
 }

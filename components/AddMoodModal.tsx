@@ -1,29 +1,21 @@
 import React, { Component } from "react";
-import { Text, View, StyleSheet, TouchableOpacity, TouchableHighlight, FlatList } from "react-native";
+import { Text, View, StyleSheet, TouchableOpacity, FlatList } from "react-native";
 import Colors from "../constants/Colors";
+
+import moods from "../utils/moods";
 
 export default class AddMoodModal extends Component {
   public props: any;
   public setState: any;
   state = {
-    moods: [
-      { id: 1, text: "Productive", color: "#4caf50" },
-      { id: 2, text: "Relaxed", color: "#2196f3" },
-      { id: 3, text: "Ambitious", color: "red" },
-      { id: 4, text: "Stressed", color: "#ff5722" },
-      { id: 5, text: "Happy", color: "#ffeb3b" },
-      { id: 6, text: "Sad", color: "purple" },
-      { id: 7, text: "Bored", color: "darkgrey" },
-      { id: 8, text: "Excited", color: "skyblue" },
-      { id: 9, text: "Indifferent", color: "black" },
-    ],
+    moods: moods,
   };
 
   addMood = (color: string, text: string) => {
     this.props.addMood(color, text);
   };
 
-  renderMood = (mood: any, index: number) => {
+  renderMood = (mood: any) => {
     return (
       <View style={styles.moodBox} key={mood.id}>
         <Text style={styles.moodText}>{mood.text}</Text>
@@ -47,7 +39,7 @@ export default class AddMoodModal extends Component {
           <FlatList
             data={this.state.moods}
             keyExtractor={(mood) => mood.id.toString()}
-            renderItem={({ item, index }) => this.renderMood(item, index)}
+            renderItem={({ item }) => this.renderMood(item)}
             //horizontal={true}
             //showsHorizontalScrollIndicator={false}
             showsVerticalScrollIndicator={false}

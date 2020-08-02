@@ -16,27 +16,18 @@ exports.__esModule = true;
 var react_1 = require("react");
 var react_native_1 = require("react-native");
 var Colors_1 = require("../constants/Colors");
+var moods_1 = require("../utils/moods");
 var AddMoodModal = /** @class */ (function (_super) {
     __extends(AddMoodModal, _super);
     function AddMoodModal() {
         var _this = _super !== null && _super.apply(this, arguments) || this;
         _this.state = {
-            moods: [
-                { id: 1, text: "Productive", color: "#4caf50" },
-                { id: 2, text: "Relaxed", color: "#2196f3" },
-                { id: 3, text: "Ambitious", color: "red" },
-                { id: 4, text: "Stressed", color: "#ff5722" },
-                { id: 5, text: "Happy", color: "#ffeb3b" },
-                { id: 6, text: "Sad", color: "purple" },
-                { id: 7, text: "Bored", color: "darkgrey" },
-                { id: 8, text: "Excited", color: "skyblue" },
-                { id: 9, text: "Indifferent", color: "black" },
-            ]
+            moods: moods_1["default"]
         };
         _this.addMood = function (color, text) {
             _this.props.addMood(color, text);
         };
-        _this.renderMood = function (mood, index) {
+        _this.renderMood = function (mood) {
             return (react_1["default"].createElement(react_native_1.View, { style: styles.moodBox, key: mood.id },
                 react_1["default"].createElement(react_native_1.Text, { style: styles.moodText }, mood.text),
                 react_1["default"].createElement(react_native_1.TouchableOpacity, { style: [styles.mood, { backgroundColor: mood.color }], onPress: function () { return _this.addMood(mood.color, mood.text); } })));
@@ -52,8 +43,8 @@ var AddMoodModal = /** @class */ (function (_super) {
                     this.props.day.id)),
             react_1["default"].createElement(react_native_1.View, { style: styles.contentContainer },
                 react_1["default"].createElement(react_native_1.FlatList, { data: this.state.moods, keyExtractor: function (mood) { return mood.id.toString(); }, renderItem: function (_a) {
-                        var item = _a.item, index = _a.index;
-                        return _this.renderMood(item, index);
+                        var item = _a.item;
+                        return _this.renderMood(item);
                     }, 
                     //horizontal={true}
                     //showsHorizontalScrollIndicator={false}

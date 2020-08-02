@@ -244,11 +244,11 @@ export default class MoodTrackerScreen extends Component {
         <ImageBackground source={require("../assets/images/header.jpg")} style={styles.headerImage}>
           <View style={styles.headerContainer}>
             <TouchableOpacity style={{ paddingHorizontal: "1%" }} onPress={() => this.changeToPreviousMonth()}>
-              <Entypo name="arrow-with-circle-left" size={32} />
+              <Entypo name="arrow-with-circle-left" size={30} />
             </TouchableOpacity>
-            <Text style={styles.header}>Moods: {this.state.month + " " + this.state.year} </Text>
+            <Text style={styles.header}>{this.state.month + " " + this.state.year} </Text>
             <TouchableOpacity style={{ paddingHorizontal: "1%" }} onPress={() => this.changeToNextMonth()}>
-              <Entypo name="arrow-with-circle-right" size={32} />
+              <Entypo name="arrow-with-circle-right" size={30} />
             </TouchableOpacity>
             {/* @ts-ignore */}
             <DrawerButton navigation={this.props.navigation} />

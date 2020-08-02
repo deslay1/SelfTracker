@@ -1,23 +1,12 @@
 import React, { Component } from "react";
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from "react-native";
+import { View, Text, StyleSheet, ScrollView, RefreshControl } from "react-native";
 import DrawerButton from "../components/DrawerButton";
 import Constants from "expo-constants";
 import Colors from "../constants/Colors";
 
-import firebase from "firebase";
 import Fire from "../Fire";
 
-const moods = [
-  { id: 1, text: "Productive", color: "#4caf50", count: 0 },
-  { id: 2, text: "Relaxed", color: "#2196f3", count: 0 },
-  { id: 3, text: "Ambitious", color: "red", count: 0 },
-  { id: 4, text: "Stressed", color: "#ff5722", count: 0 },
-  { id: 5, text: "Happy", color: "#ffeb3b", count: 0 },
-  { id: 6, text: "Sad", color: "purple", count: 0 },
-  { id: 7, text: "Bored", color: "darkgrey", count: 0 },
-  { id: 8, text: "Excited", color: "skyblue", count: 0 },
-  { id: 9, text: "Indifferent", color: "black", count: 0 },
-];
+import moods from "../utils/moods";
 
 export default class TemporaryScreen extends Component {
   public props: any;
@@ -25,6 +14,8 @@ export default class TemporaryScreen extends Component {
   state = {
     allMoods: [],
     moods: moods,
+    loading: true,
+    refreshing: false,
   };
 
   componentDidMount() {
@@ -35,22 +26,46 @@ export default class TemporaryScreen extends Component {
       const moodDay = moodTimestamp.getDate();
       console.log(moodDay); */
 
-      allMoods.map((mood: any) => {
+      // To keep from adding on to the count cause callback from firestore is always fired whenever changes are made to the database
+      this.resetMoodCounts();
+      const unique = this.makeUnique(allMoods, (mood: any) => mood.day);
+
+      unique.map((mood: any) => {
         const stateMoods = this.state.moods;
-        const moodsFiltered = stateMoods.map((e) => e.text);
-        const moodIndex = moodsFiltered.indexOf(mood.text);
+        const moodTypes = stateMoods.map((e) => e.text);
+        const moodIndex = moodTypes.indexOf(mood.text);
         stateMoods[moodIndex].count++;
-        this.setState({ moods: stateMoods.sort((a, b) => b.count - a.count) });
+        this.setState({ moods: stateMoods.sort((a: any, b: any) => b.count - a.count) });
       });
       this.setState({
         allMoods: allMoods,
+        loading: false,
       });
     });
   }
 
+  makeUnique = (data: any, key: any) => {
+    return [...new Map(data.map((x: any) => [key(x), x])).values()];
+  };
+
+  resetMoodCounts = () => {
+    const moodsReset = this.state.moods.map((e: any) => {
+      e.count = 0;
+      return e;
+    });
+    this.setState({ moods: moodsReset, isLoading: false });
+  };
+
   componentWillUnmount() {
     Fire.detachMood();
   }
+
+  onRefresh = () => {
+    this.setState({ refreshing: true });
+    setTimeout(() => {
+      this.setState({ refreshing: false });
+    }, 2000);
+  };
 
   renderMood = (lower: number, upper: number) => {
     return this.state.moods.slice(lower, upper).map((mood: any) => {
@@ -78,11 +93,15 @@ export default class TemporaryScreen extends Component {
             <DrawerButton navigation={this.props.navigation} />
           </View>
         </View>
-        <ScrollView contentContainerStyle={styles.content}>
-          <View style={{ flexDirection: "row" }}>{this.renderMood(0, 3)}</View>
-          <View style={{ flexDirection: "row" }}>{this.renderMood(3, 6)}</View>
-          <View style={{ flexDirection: "row" }}>{this.renderMood(6, 9)}</View>
-        </ScrollView>
+        {!this.state.loading && (
+          <ScrollView
+            contentContainerStyle={styles.content}
+            refreshControl={<RefreshControl refreshing={this.state.refreshing} onRefresh={this.onRefresh} />}>
+            <View style={{ flexDirection: "row" }}>{this.renderMood(0, 3)}</View>
+            <View style={{ flexDirection: "row" }}>{this.renderMood(3, 6)}</View>
+            <View style={{ flexDirection: "row" }}>{this.renderMood(6, 9)}</View>
+          </ScrollView>
+        )}
       </View>
     );
   }
